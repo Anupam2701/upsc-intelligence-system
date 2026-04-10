@@ -26,9 +26,12 @@ export default function Editor({
 
   // 🔥 AUTO SAVE (debounced feel)
   useEffect(() => {
-    const timeout = setTimeout(async () => {
-      if (!title && !content) return;
+  if (!subject || !topic || !reference || !subtopic) return;
 
+  const timeout = setTimeout(async () => {
+    if (!title && !content) return;
+
+    try {
       await axios.post(`${API}/notes/`, {
         title,
         content,
@@ -40,11 +43,15 @@ export default function Editor({
       });
 
       fetchNotes();
-    }, 1000);
+    } catch (err) {
+      console.error("Auto-save error:", err);
+    }
 
-    return () => clearTimeout(timeout);
-  }, [title, content]);
+  }, 1000);
 
+  return () => clearTimeout(timeout);
+
+}, [title, content, subject, topic, reference, subtopic, fetchNotes]);
   return (
     <div className="flex-1 bg-[#0a0a0a] p-6 flex flex-col">
 
