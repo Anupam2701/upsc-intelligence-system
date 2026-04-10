@@ -49,7 +49,7 @@ export default function NotesPage() {
 
  const handleDelete = async (id) => {
   try {
-    await axios.delete(`${API}/notes/`);
+    await axios.delete(`${API}/notes/${id}`);
     fetchNotes();
   } catch (err) {
     console.error(err);
@@ -58,7 +58,10 @@ export default function NotesPage() {
 
   // 🔥 UPDATE
   const handleUpdate = async (id) => {
-    await axios.put(`${API}/notes/${id}`, form);
+    await axios.put(`${API}/notes/${id}`, {
+  title: form.title,
+  content: form.content
+});
 
     setEditingId(null);
     setForm({ title: "", content: "" });

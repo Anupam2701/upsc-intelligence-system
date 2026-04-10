@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes.note_routes import router as note_router
+from app.routes.note_routes import router as note_router, session_router
 from app.database import Base, engine
 
 # 🔥 IMPORTANT: import ALL models
@@ -22,6 +22,7 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 app.include_router(note_router)
+app.include_router(session_router)
 
 @app.get("/")
 def root():
