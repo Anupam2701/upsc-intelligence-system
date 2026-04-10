@@ -4,7 +4,7 @@ from app.database import SessionLocal
 from app.models.study_session import StudySession
 from app.schemas.study_session import StudySessionCreate
 
-router = APIRouter()
+router = APIRouter(prefix="/sessions")
 
 def get_db():
     db = SessionLocal()
