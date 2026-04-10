@@ -32,14 +32,15 @@ export default function DailyPage({ sessions, fetchSessions }) {
     revision: false,
   });
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
+  try {
     await axios.post(`${API}/sessions/`, {
       ...form,
       duration: Number(form.duration),
       quality_score: Number(form.quality_score),
     });
 
-    fetchSessions();
+    await fetchSessions(); // 🔥 wait for refresh
 
     setForm({
       date: today,
@@ -49,7 +50,11 @@ export default function DailyPage({ sessions, fetchSessions }) {
       quality_score: "",
       revision: false,
     });
-  };
+
+  } catch (err) {
+    console.error("ADD SESSION ERROR:", err.response?.data || err.message);
+  }
+};
 
   return (
     <div className="space-y-6 text-white">
