@@ -7,6 +7,8 @@ import {
   subDays,
 } from "date-fns";
 
+const API = "https://upsc-intelligence-system.onrender.com";
+
 export default function CalendarView({ sessions }) {
   const [mode, setMode] = useState("month");
   const today = new Date();

@@ -1,3 +1,5 @@
+const API = "https://upsc-intelligence-system.onrender.com";
+
 export default function SessionList({ sessions }) {
   return (
     <div className="bg-white p-4 rounded-xl shadow">

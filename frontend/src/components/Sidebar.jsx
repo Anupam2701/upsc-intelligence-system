@@ -8,6 +8,8 @@ import {
   Clock,
 } from "lucide-react";
 
+const API = "https://upsc-intelligence-system.onrender.com";
+
 export default function Sidebar() {
   const linkClass =
     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-white/10";

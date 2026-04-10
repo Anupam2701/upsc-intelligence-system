@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 
+const API = "https://upsc-intelligence-system.onrender.com";
+
 function AddSession({ fetchSessions }) {
   const [form, setForm] = useState({
     date: "",
@@ -21,7 +23,7 @@ function AddSession({ fetchSessions }) {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://127.0.0.1:8000/sessions/", {
+      await axios.post(`${API}/sessions/`, {
         ...form,
         duration: Number(form.duration),
         quality_score: Number(form.quality_score),

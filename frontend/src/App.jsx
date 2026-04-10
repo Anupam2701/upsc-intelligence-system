@@ -12,13 +12,15 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import NotesPage from "./pages/NotesPage";
 import AIPage from "./pages/AIPage";
 
+const API = "https://upsc-intelligence-system.onrender.com";
+
 export default function App() {
   const [sessions, setSessions] = useState([]);
 
   // 🔥 Fetch sessions
   const fetchSessions = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/sessions/");
+      const res = await axios.get(`${API}/sessions/`);
       setSessions(res.data);
     } catch (err) {
       console.error(err);

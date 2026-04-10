@@ -3,6 +3,8 @@ import axios from "axios";
 
 const TYPES = ["concept", "revision", "mistake", "pyq"];
 
+const API = "https://upsc-intelligence-system.onrender.com";
+
 export default function NotesPage() {
   const [notes, setNotes] = useState({});
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -21,7 +23,7 @@ export default function NotesPage() {
 
   // 🔥 FETCH
   const fetchNotes = async () => {
-    const res = await axios.get("http://127.0.0.1:8000/notes/structured");
+    const res = await axios.get(`${API}/notes/structured`);
     setNotes(res.data || {});
   };
 
@@ -33,7 +35,7 @@ export default function NotesPage() {
   const handleAdd = async (type) => {
     if (!selectedSubject || !selectedTopic || !form.title) return;
 
-    await axios.post("http://127.0.0.1:8000/notes/", {
+    await axios.post(`${API}/notes/`, {
       ...form,
       subject: selectedSubject,
       topic: selectedTopic,
@@ -47,7 +49,7 @@ export default function NotesPage() {
 
  const handleDelete = async (id) => {
   try {
-    await axios.delete(`http://127.0.0.1:8000/notes/${id}`);
+    await axios.delete(`${API}/notes/`);
     fetchNotes();
   } catch (err) {
     console.error(err);
@@ -56,7 +58,7 @@ export default function NotesPage() {
 
   // 🔥 UPDATE
   const handleUpdate = async (id) => {
-    await axios.put(`http://127.0.0.1:8000/notes/${id}`, form);
+    await axios.put(`${API}/notes/${id}`, form);
 
     setEditingId(null);
     setForm({ title: "", content: "" });

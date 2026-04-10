@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 
+const API = "https://upsc-intelligence-system.onrender.com";
+
 export default function DailyPage({ sessions, fetchSessions }) {
   const today = new Date().toISOString().split("T")[0];
 
@@ -31,7 +33,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
   });
 
   const handleSubmit = async () => {
-    await axios.post("http://127.0.0.1:8000/sessions/", {
+    await axios.post(`${API}/sessions/`, {
       ...form,
       duration: Number(form.duration),
       quality_score: Number(form.quality_score),
