@@ -7,7 +7,6 @@ export default function StudyForm({ addSession }) {
     date: "",
   });
 
-  const API = "https://upsc-intelligence-system.onrender.com";
 
   const submit = () => {
     if (!form.subject || !form.duration || !form.date) return;

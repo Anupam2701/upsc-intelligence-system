@@ -21,8 +21,6 @@ ChartJS.register(
   Legend
 );
 
-const API = "https://upsc-intelligence-system.onrender.com";
-
 export default function Dashboard({ sessions }) {
   // 🔹 Total Time
   const totalTime = sessions.reduce((sum, s) => sum + s.duration, 0);

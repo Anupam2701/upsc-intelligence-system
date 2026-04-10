@@ -8,7 +8,6 @@ import {
   Clock,
 } from "lucide-react";
 
-const API = "https://upsc-intelligence-system.onrender.com";
 
 export default function Sidebar() {
   const linkClass =

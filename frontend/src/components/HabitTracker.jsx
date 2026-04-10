@@ -1,4 +1,3 @@
-const API = "https://upsc-intelligence-system.onrender.com";
 
 export default function HabitTracker({ habits, setHabits }) {
   const toggle = (key) =>

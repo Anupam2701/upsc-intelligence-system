@@ -1,4 +1,4 @@
-const API = "https://upsc-intelligence-system.onrender.com";
+
 
 export default function SessionList({ sessions }) {
   return (
