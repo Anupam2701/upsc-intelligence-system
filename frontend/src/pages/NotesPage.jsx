@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
-const TYPES = ["concept", "revision", "mistake", "pyq"];
+import NotesBoard from "../components/Notes/NotesBoard";
 
 const API = "https://upsc-intelligence-system.onrender.com";
 
@@ -10,18 +9,7 @@ export default function NotesPage() {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState(null);
 
-  const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState("");
-
-  const [activeAdd, setActiveAdd] = useState(null);
-  const [editingId, setEditingId] = useState(null);
-
-  const [form, setForm] = useState({
-    title: "",
-    content: "",
-  });
-
-  // 🔥 FETCH
+  // 🔥 FETCH STRUCTURED NOTES
   const fetchNotes = async () => {
     const res = await axios.get(`${API}/notes/structured`);
     setNotes(res.data || {});
@@ -31,41 +19,13 @@ export default function NotesPage() {
     fetchNotes();
   }, []);
 
-  // 🔥 ADD
-  const handleAdd = async (type) => {
-    if (!selectedSubject || !selectedTopic || !form.title) return;
+  // 🔥 FLATTEN NOTES FOR SELECTED TOPIC
+  const getFlatNotes = () => {
+    if (!selectedSubject || !selectedTopic) return [];
 
-    await axios.post(`${API}/notes/`, {
-      ...form,
-      subject: selectedSubject,
-      topic: selectedTopic,
-      type,
-    });
+    const topicData = notes[selectedSubject]?.[selectedTopic] || {};
 
-    setForm({ title: "", content: "" });
-    setActiveAdd(null);
-    fetchNotes();
-  };
-
- const handleDelete = async (id) => {
-  try {
-    await axios.delete(`${API}/notes/${id}`);
-    fetchNotes();
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-  // 🔥 UPDATE
-  const handleUpdate = async (id) => {
-    await axios.put(`${API}/notes/${id}`, {
-  title: form.title,
-  content: form.content
-});
-
-    setEditingId(null);
-    setForm({ title: "", content: "" });
-    fetchNotes();
+    return Object.values(topicData).flat();
   };
 
   return (
@@ -75,7 +35,6 @@ export default function NotesPage() {
       <div className="w-1/6 card overflow-y-auto">
         <h2 className="mb-3 font-semibold">Subjects</h2>
 
-        {/* CREATE SUBJECT */}
         <input
           placeholder="➕ New Subject"
           className="input mb-3"
@@ -144,165 +103,34 @@ export default function NotesPage() {
       </div>
 
       {/* 🔥 MAIN PANEL */}
-      <div className="flex-1 space-y-4 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
 
         {/* EMPTY STATE */}
-        {Object.keys(notes).length === 0 && (
+        {!selectedSubject && (
           <div className="card text-center py-10">
-            <h2 className="text-lg font-semibold">Start Taking Notes 🚀</h2>
-            <p className="text-gray-400 text-sm">
-              Create a subject and topic to begin
-            </p>
+            <h2 className="text-lg font-semibold">
+              Select a subject to begin 🚀
+            </h2>
           </div>
         )}
 
-        {/* SEARCH + FILTER */}
-        <div className="flex gap-3">
-          <input
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input flex-1"
-          />
-
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="input"
-          >
-            <option value="">All</option>
-            {TYPES.map((t) => (
-              <option key={t}>{t}</option>
-            ))}
-          </select>
-        </div>
-
-        {!selectedTopic && selectedSubject && (
-          <p className="text-gray-400">Select or create a topic</p>
+        {selectedSubject && !selectedTopic && (
+          <div className="card text-center py-10">
+            <h2 className="text-lg font-semibold">
+              Select or create a topic
+            </h2>
+          </div>
         )}
 
-        {/* 🔥 NOTES */}
-        {selectedTopic &&
-          TYPES.map((type) => {
-            const safeNotes =
-              notes?.[selectedSubject]?.[selectedTopic]?.[type] || [];
-
-            return (
-              <div key={type} className="card">
-
-                <div className="flex justify-between mb-2">
-                  <h3 className="capitalize font-semibold">{type}</h3>
-
-                  <button
-                    onClick={() => setActiveAdd(type)}
-                    className="text-indigo-400 text-sm"
-                  >
-                    + Add
-                  </button>
-                </div>
-
-                {/* ADD */}
-                {activeAdd === type && (
-                  <div className="space-y-2 mb-3">
-                    <input
-                      placeholder="Title"
-                      value={form.title}
-                      onChange={(e) =>
-                        setForm({ ...form, title: e.target.value })
-                      }
-                      className="input"
-                    />
-
-                    <textarea
-                      placeholder="Content"
-                      value={form.content}
-                      onChange={(e) =>
-                        setForm({ ...form, content: e.target.value })
-                      }
-                      className="input h-20"
-                    />
-
-                    <button
-                      onClick={() => handleAdd(type)}
-                      className="bg-indigo-500 px-3 py-1 rounded"
-                    >
-                      Save
-                    </button>
-                  </div>
-                )}
-
-                {/* LIST */}
-                {safeNotes
-                  .filter((n) =>
-                    n.title.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .filter((n) =>
-                    filterType ? n.type === filterType : true
-                  )
-                  .map((n) => (
-                    <div key={n.id} className="border-b py-2">
-
-                      {editingId === n.id ? (
-                        <>
-                          <input
-                            value={form.title}
-                            onChange={(e) =>
-                              setForm({ ...form, title: e.target.value })
-                            }
-                            className="input"
-                          />
-
-                          <textarea
-                            value={form.content}
-                            onChange={(e) =>
-                              setForm({ ...form, content: e.target.value })
-                            }
-                            className="input"
-                          />
-
-                          <button
-                            onClick={() => handleUpdate(n.id)}
-                            className="bg-green-500 px-2 py-1 rounded"
-                          >
-                            Save
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <p className="font-medium">{n.title}</p>
-                          <p className="text-sm text-gray-400">
-                            {n.content}
-                          </p>
-
-                          <div className="flex gap-3 text-xs mt-1">
-                            <button
-                              onClick={() => {
-                                setEditingId(n.id);
-                                setForm({
-                                  title: n.title,
-                                  content: n.content,
-                                });
-                              }}
-                              className="text-indigo-400"
-                            >
-                              Edit
-                            </button>
-
-                            <button
-                              onClick={() => handleDelete(n.id)}
-                              className="text-red-400"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-
-              </div>
-            );
-          })}
+        {/* 🔥 GOD LEVEL NOTES UI */}
+        {selectedSubject && selectedTopic && (
+          <NotesBoard
+            notes={getFlatNotes()}
+            fetchNotes={fetchNotes}
+            selectedSubject={selectedSubject}
+            selectedTopic={selectedTopic}
+          />
+        )}
       </div>
     </div>
   );
