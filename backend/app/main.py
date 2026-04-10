@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes.note_routes import router as note_router, session_router
+from app.routes.note_routes import router as note_router
+from app.routes.session_routes import router as session_router
 from app.database import Base, engine
 
 # 🔥 IMPORTANT: import ALL models
