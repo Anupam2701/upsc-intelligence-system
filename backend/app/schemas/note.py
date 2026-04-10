@@ -5,13 +5,13 @@ class NoteCreate(BaseModel):
     content: str
     subject: str
     topic: str
-    type: str
 
-class NoteOut(NoteCreate):
-    id: int
+    # 🔥 NEW
+    reference: str
+    subtopic: str
 
-    class Config:
-        orm_mode = True
+    type: str = "concept"
+
 
 class NoteUpdate(BaseModel):
     title: str

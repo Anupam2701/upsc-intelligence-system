@@ -6,9 +6,17 @@ class Note(Base):
     __tablename__ = "notes"
 
     id = Column(Integer, primary_key=True, index=True)
+
+    subject = Column(String, index=True)
+    topic = Column(String, index=True)
+
+    # 🔥 NEW FIELDS
+    reference = Column(String, index=True)
+    subtopic = Column(String, index=True)
+
     title = Column(String)
     content = Column(Text)
-    subject = Column(String)
-    topic = Column(String)
-    type = Column(String)  # concept / revision / mistake
+
+    type = Column(String, default="concept")
+
     created_at = Column(DateTime, default=datetime.utcnow)

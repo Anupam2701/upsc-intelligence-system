@@ -51,28 +51,30 @@ def structured_notes(db: Session = Depends(get_db)):
     result = {}
 
     for note in notes:
-        subject = note.subject
-        topic = note.topic
-        note_type = note.type
+        s = note.subject
+        t = note.topic
+        r = note.reference
+        st = note.subtopic
+        typ = note.type
 
-        if subject not in result:
-            result[subject] = {}
+        if s not in result:
+            result[s] = {}
 
-        if topic not in result[subject]:
-            result[subject][topic] = {
-                "concept": [],
-                "revision": [],
-                "mistake": [],
-                "pyq": []
+        if t not in result[s]:
+            result[s][t] = {}
+
+        if r not in result[s][t]:
+            result[s][t][r] = {}
+
+        if st not in result[s][t][r]:
+            result[s][t][r][st] = {
+                "concept": []
             }
 
-        result[subject][topic][note_type].append({
+        result[s][t][r][st]["concept"].append({
             "id": note.id,
             "title": note.title,
-            "content": note.content,
-            "subject": note.subject,
-            "topic": note.topic,
-            "type": note.type
+            "content": note.content
         })
 
     return result

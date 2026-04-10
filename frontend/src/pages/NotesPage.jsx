@@ -1,137 +1,106 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import NotesBoard from "../components/Notes/NotesBoard";
+import Column from "../components/Notes/Column";
+import Editor from "../components/Notes/Editor";
 
-const API = "https://upsc-intelligence-system.onrender.com";
+const API = "https://upsc-intelligence-system.onrender.com"
 
 export default function NotesPage() {
-  const [notes, setNotes] = useState({});
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [data, setData] = useState({});
 
-  // 🔥 FETCH STRUCTURED NOTES
+  const [subject, setSubject] = useState(null);
+  const [topic, setTopic] = useState(null);
+  const [reference, setReference] = useState(null);
+  const [subtopic, setSubtopic] = useState(null);
+
+  // FETCH
   const fetchNotes = async () => {
     const res = await axios.get(`${API}/notes/structured`);
-    setNotes(res.data || {});
+    setData(res.data || {});
   };
 
   useEffect(() => {
     fetchNotes();
   }, []);
 
-  // 🔥 FLATTEN NOTES FOR SELECTED TOPIC
-  const getFlatNotes = () => {
-    if (!selectedSubject || !selectedTopic) return [];
+  // DERIVED DATA
+  const subjects = Object.keys(data);
 
-    const topicData = notes[selectedSubject]?.[selectedTopic] || {};
+  const topics = subject ? Object.keys(data[subject] || {}) : [];
 
-    return Object.values(topicData).flat();
-  };
+  const references =
+    subject && topic
+      ? Object.keys(data[subject][topic] || {})
+      : [];
+
+  const subtopics =
+    subject && topic && reference
+      ? Object.keys(data[subject][topic][reference] || {})
+      : [];
+
+  const notes =
+    subject && topic && reference && subtopic
+      ? data[subject][topic][reference][subtopic]?.concept || []
+      : [];
 
   return (
-    <div className="flex gap-6 text-white h-[85vh]">
+    <div className="flex h-[90vh] text-white">
 
-      {/* 🔥 SUBJECT PANEL */}
-      <div className="w-1/6 card overflow-y-auto">
-        <h2 className="mb-3 font-semibold">Subjects</h2>
+      <Column
+        title="Subject"
+        items={subjects}
+        selected={subject}
+        onSelect={(v) => {
+          setSubject(v);
+          setTopic(null);
+          setReference(null);
+          setSubtopic(null);
+        }}
+      />
 
-        <input
-          placeholder="➕ New Subject"
-          className="input mb-3"
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && e.target.value) {
-              setSelectedSubject(e.target.value);
-              setSelectedTopic(null);
-              e.target.value = "";
-            }
-          }}
+      <Column
+        title="Topic"
+        items={topics}
+        selected={topic}
+        onSelect={(v) => {
+          setTopic(v);
+          setReference(null);
+          setSubtopic(null);
+        }}
+      />
+
+      <Column
+        title="Reference"
+        items={references}
+        selected={reference}
+        onSelect={(v) => {
+          setReference(v);
+          setSubtopic(null);
+        }}
+      />
+
+      <Column
+        title="Subtopic"
+        items={subtopics}
+        selected={subtopic}
+        onSelect={setSubtopic}
+      />
+
+      {/* EDITOR */}
+      {subtopic ? (
+        <Editor
+          subject={subject}
+          topic={topic}
+          reference={reference}
+          subtopic={subtopic}
+          notes={notes}
+          fetchNotes={fetchNotes}
         />
-
-        {Object.keys(notes).length === 0 && (
-          <p className="text-gray-400 text-sm">No notes yet</p>
-        )}
-
-        {Object.keys(notes).map((sub) => (
-          <div
-            key={sub}
-            onClick={() => {
-              setSelectedSubject(sub);
-              setSelectedTopic(null);
-            }}
-            className={`p-2 rounded cursor-pointer ${
-              selectedSubject === sub
-                ? "bg-indigo-500/30"
-                : "hover:bg-white/10"
-            }`}
-          >
-            {sub}
-          </div>
-        ))}
-      </div>
-
-      {/* 🔥 TOPIC PANEL */}
-      <div className="w-1/6 card overflow-y-auto">
-        <h2 className="mb-3 font-semibold">Topics</h2>
-
-        {selectedSubject && (
-          <input
-            placeholder="➕ New Topic"
-            className="input mb-3"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && e.target.value) {
-                setSelectedTopic(e.target.value);
-                e.target.value = "";
-              }
-            }}
-          />
-        )}
-
-        {selectedSubject &&
-          Object.keys(notes[selectedSubject] || {}).map((topic) => (
-            <div
-              key={topic}
-              onClick={() => setSelectedTopic(topic)}
-              className={`p-2 rounded cursor-pointer ${
-                selectedTopic === topic
-                  ? "bg-indigo-500/30"
-                  : "hover:bg-white/10"
-              }`}
-            >
-              {topic}
-            </div>
-          ))}
-      </div>
-
-      {/* 🔥 MAIN PANEL */}
-      <div className="flex-1 overflow-y-auto">
-
-        {/* EMPTY STATE */}
-        {!selectedSubject && (
-          <div className="card text-center py-10">
-            <h2 className="text-lg font-semibold">
-              Select a subject to begin 🚀
-            </h2>
-          </div>
-        )}
-
-        {selectedSubject && !selectedTopic && (
-          <div className="card text-center py-10">
-            <h2 className="text-lg font-semibold">
-              Select or create a topic
-            </h2>
-          </div>
-        )}
-
-        {/* 🔥 GOD LEVEL NOTES UI */}
-        {selectedSubject && selectedTopic && (
-          <NotesBoard
-            notes={getFlatNotes()}
-            fetchNotes={fetchNotes}
-            selectedSubject={selectedSubject}
-            selectedTopic={selectedTopic}
-          />
-        )}
-      </div>
+      ) : (
+        <div className="flex-1 flex items-center justify-center text-gray-500">
+          Select a subtopic to start writing ✍️
+        </div>
+      )}
     </div>
   );
 }
