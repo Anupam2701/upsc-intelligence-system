@@ -26,21 +26,20 @@ export default function Editor({
 
   // 🔥 AUTO SAVE (debounced feel)
   useEffect(() => {
-  if (!subject || !topic || !reference || !subtopic) return;
 
   const timeout = setTimeout(async () => {
     if (!title && !content) return;
 
     try {
       await axios.post(`${API}/notes/`, {
-        title,
-        content,
-        subject,
-        topic,
-        reference,
-        subtopic,
-        type: "concept"
-      });
+  title: title || "Untitled",
+  content: content || "",
+  subject: subject || "",
+  topic: topic || "",
+  reference: reference || "",
+  subtopic: subtopic || "",
+  type: "concept"
+});
 
       fetchNotes();
     } catch (err) {

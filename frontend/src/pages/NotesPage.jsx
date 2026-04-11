@@ -1,106 +1,82 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Column from "../components/Notes/Column";
-import Editor from "../components/Notes/Editor";
 
-const API = "https://upsc-intelligence-system.onrender.com"
+const API = "https://upsc-intelligence-system.onrender.com";
 
 export default function NotesPage() {
-  const [data, setData] = useState({});
+  const [notes, setNotes] = useState([]);
 
-  const [subject, setSubject] = useState(null);
-  const [topic, setTopic] = useState(null);
-  const [reference, setReference] = useState(null);
-  const [subtopic, setSubtopic] = useState(null);
+  const [form, setForm] = useState({
+    subject: "",
+    topic: "",
+    reference: "",
+    subtopic: "",
+    title: "",
+    content: ""
+  });
 
-  // FETCH
   const fetchNotes = async () => {
-    const res = await axios.get(`${API}/notes/structured`);
-    setData(res.data || {});
+    const res = await axios.get(`${API}/notes/`);
+    setNotes(res.data);
   };
 
   useEffect(() => {
     fetchNotes();
   }, []);
 
-  // DERIVED DATA
-  const subjects = Object.keys(data);
+  const handleAdd = async () => {
+    await axios.post(`${API}/notes/`, form);
+    fetchNotes();
+  };
 
-  const topics = subject ? Object.keys(data[subject] || {}) : [];
-
-  const references =
-    subject && topic
-      ? Object.keys(data[subject][topic] || {})
-      : [];
-
-  const subtopics =
-    subject && topic && reference
-      ? Object.keys(data[subject][topic][reference] || {})
-      : [];
-
-  const notes =
-    subject && topic && reference && subtopic
-      ? data[subject][topic][reference][subtopic]?.concept || []
-      : [];
+  const handleDelete = async (id) => {
+    await axios.delete(`${API}/notes/${id}`);
+    fetchNotes();
+  };
 
   return (
-    <div className="flex h-[90vh] text-white">
+    <div className="p-6 text-white space-y-4">
 
-      <Column
-        title="Subject"
-        items={subjects}
-        selected={subject}
-        onSelect={(v) => {
-          setSubject(v);
-          setTopic(null);
-          setReference(null);
-          setSubtopic(null);
-        }}
-      />
+      <h1 className="text-2xl font-bold">Notes</h1>
 
-      <Column
-        title="Topic"
-        items={topics}
-        selected={topic}
-        onSelect={(v) => {
-          setTopic(v);
-          setReference(null);
-          setSubtopic(null);
-        }}
-      />
+      {/* FORM */}
+      <div className="space-y-2">
+        {Object.keys(form).map((key) => (
+          <input
+            key={key}
+            placeholder={key}
+            value={form[key]}
+            onChange={(e) =>
+              setForm({ ...form, [key]: e.target.value })
+            }
+            className="input w-full"
+          />
+        ))}
 
-      <Column
-        title="Reference"
-        items={references}
-        selected={reference}
-        onSelect={(v) => {
-          setReference(v);
-          setSubtopic(null);
-        }}
-      />
+        <button
+          onClick={handleAdd}
+          className="bg-indigo-500 px-4 py-2 rounded"
+        >
+          Add Note
+        </button>
+      </div>
 
-      <Column
-        title="Subtopic"
-        items={subtopics}
-        selected={subtopic}
-        onSelect={setSubtopic}
-      />
+      {/* LIST */}
+      <div className="space-y-2">
+        {notes.map((n) => (
+          <div key={n.id} className="bg-gray-800 p-3 rounded">
+            <h3>{n.title}</h3>
+            <p className="text-sm text-gray-400">{n.content}</p>
 
-      {/* EDITOR */}
-      {subtopic ? (
-        <Editor
-          subject={subject}
-          topic={topic}
-          reference={reference}
-          subtopic={subtopic}
-          notes={notes}
-          fetchNotes={fetchNotes}
-        />
-      ) : (
-        <div className="flex-1 flex items-center justify-center text-gray-500">
-          Select a subtopic to start writing ✍️
-        </div>
-      )}
+            <button
+              onClick={() => handleDelete(n.id)}
+              className="text-red-400 text-sm"
+            >
+              Delete
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

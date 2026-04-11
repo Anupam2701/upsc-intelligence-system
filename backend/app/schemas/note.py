@@ -1,16 +1,14 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class NoteCreate(BaseModel):
-    title: str
-    content: str
     subject: str
     topic: str
-
-    # 🔥 NEW
     reference: str
     subtopic: str
-
-    type: str = "concept"
+    title: str
+    content: str
+    type: Optional[str] = "concept"
 
 
 class NoteUpdate(BaseModel):

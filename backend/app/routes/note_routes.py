@@ -2,14 +2,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.note import Note
-from app.schemas.note import NoteCreate
-from pydantic import BaseModel
-
-class NoteUpdate(BaseModel):
-    title: str
-    content: str
+from app.schemas.note import NoteCreate, NoteUpdate
 
 router = APIRouter(prefix="/notes")
+
 
 def get_db():
     db = SessionLocal()
@@ -18,89 +14,57 @@ def get_db():
     finally:
         db.close()
 
-# CREATE
+
+# ✅ CREATE
 @router.post("/")
 def create_note(note: NoteCreate, db: Session = Depends(get_db)):
-    new_note = Note(**note.dict())
+    new_note = Note(
+        subject=note.subject or "",
+        topic=note.topic or "",
+        reference=note.reference or "",
+        subtopic=note.subtopic or "",
+        title=note.title,
+        content=note.content,
+        type=note.type or "concept"
+    )
+
     db.add(new_note)
     db.commit()
-    return {"msg": "Note added"}
+    db.refresh(new_note)
 
-# GET ALL
+    return new_note
+
+
+# ✅ GET ALL
 @router.get("/")
 def get_notes(db: Session = Depends(get_db)):
-    return db.query(Note).order_by(Note.created_at.desc()).all()
+    return db.query(Note).all()
 
-# FILTER
-@router.get("/filter")
-def filter_notes(subject: str = None, type: str = None, db: Session = Depends(get_db)):
-    query = db.query(Note)
 
-    if subject:
-        query = query.filter(Note.subject == subject)
+# ✅ UPDATE
+@router.put("/{note_id}")
+def update_note(note_id: int, data: NoteUpdate, db: Session = Depends(get_db)):
+    note = db.query(Note).filter(Note.id == note_id).first()
 
-    if type:
-        query = query.filter(Note.type == type)
+    if not note:
+        return {"error": "Not found"}
 
-    return query.all()
+    note.title = data.title
+    note.content = data.content
 
-@router.get("/structured")
-def structured_notes(db: Session = Depends(get_db)):
-    notes = db.query(Note).all()
+    db.commit()
+    return {"msg": "updated"}
 
-    result = {}
 
-    for note in notes:
-        s = note.subject
-        t = note.topic
-        r = note.reference
-        st = note.subtopic
-        typ = note.type
-
-        if s not in result:
-            result[s] = {}
-
-        if t not in result[s]:
-            result[s][t] = {}
-
-        if r not in result[s][t]:
-            result[s][t][r] = {}
-
-        if st not in result[s][t][r]:
-            result[s][t][r][st] = {
-                "concept": []
-            }
-
-        result[s][t][r][st]["concept"].append({
-            "id": note.id,
-            "title": note.title,
-            "content": note.content
-        })
-
-    return result
-
+# ✅ DELETE
 @router.delete("/{note_id}")
 def delete_note(note_id: int, db: Session = Depends(get_db)):
     note = db.query(Note).filter(Note.id == note_id).first()
 
     if not note:
-        return {"error": "Note not found"}
+        return {"error": "Not found"}
 
     db.delete(note)
     db.commit()
 
-    return {"msg": "Deleted"}
-
-@router.put("/{note_id}")
-def update_note(note_id: int, updated: NoteUpdate, db: Session = Depends(get_db)):
-    note = db.query(Note).filter(Note.id == note_id).first()
-
-    if not note:
-        return {"error": "Note not found"}
-
-    note.title = updated.title
-    note.content = updated.content
-
-    db.commit()
-
-    return {"msg": "Updated"}
+    return {"msg": "deleted"}

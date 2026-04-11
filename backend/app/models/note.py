@@ -7,16 +7,12 @@ class Note(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    subject = Column(String, index=True)
-    topic = Column(String, index=True)
-
-    # 🔥 NEW FIELDS
-    reference = Column(String, index=True)
-    subtopic = Column(String, index=True)
+    subject = Column(String)
+    topic = Column(String)
+    reference = Column(String)
+    subtopic = Column(String)
 
     title = Column(String)
     content = Column(Text)
-
-    type = Column(String, default="concept")
 
     created_at = Column(DateTime, default=datetime.utcnow)
