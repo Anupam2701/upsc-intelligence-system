@@ -6,7 +6,7 @@ from app.routes.session_routes import router as session_router
 
 app = FastAPI()
 
-# ✅ CORS (MUST BE BEFORE ROUTES)
+# ✅ CORS FIRST
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,8 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ ROUTES
-app.include_router(note_router)
+# ✅ ROUTES (CRITICAL FIX HERE)
+app.include_router(note_router, prefix="/notes")
 app.include_router(session_router, prefix="/sessions")
 
 @app.get("/")

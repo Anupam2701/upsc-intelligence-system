@@ -24,8 +24,8 @@ def create_note(note: NoteCreate, db: Session = Depends(get_db)):
             topic=note.topic or "",
             reference=note.reference or "",
             subtopic=note.subtopic or "",
-            title=note.title,
-            content=note.content,
+            title=note.title or "Untitled",
+            content=note.content or "",
             type="concept"
         )
 
