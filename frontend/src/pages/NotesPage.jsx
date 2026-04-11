@@ -25,9 +25,25 @@ export default function NotesPage() {
   }, []);
 
   const handleAdd = async () => {
-    await axios.post(`${API}/notes/`, form);
+  try {
+    const res = await axios.post(`${API}/notes/`, {
+      subject: form.subject || "",
+      topic: form.topic || "",
+      reference: form.reference || "",
+      subtopic: form.subtopic || "",
+      title: form.title || "Untitled",
+      content: form.content || "",
+      type: "concept"
+    });
+
+    console.log("SUCCESS:", res.data);
+
     fetchNotes();
-  };
+
+  } catch (err) {
+    console.error("ADD NOTE ERROR:", err.response?.data || err.message);
+  }
+};
 
   const handleDelete = async (id) => {
     await axios.delete(`${API}/notes/${id}`);
