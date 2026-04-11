@@ -46,7 +46,7 @@ export default function NotesPage() {
     }, 1000); // debounce
 
     return () => clearTimeout(timeout);
-  }, [editor]);
+  }, [editor, selected]);
 
   // 🔥 UNIQUE LISTS
   const subjects = [...new Set(notes.map(n => n.subject))];
