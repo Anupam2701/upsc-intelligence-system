@@ -18,21 +18,14 @@ def get_db():
 # ✅ CREATE
 @router.post("/")
 def create_note(note: NoteCreate, db: Session = Depends(get_db)):
-    new_note = Note(
-        subject=note.subject or "",
-        topic=note.topic or "",
-        reference=note.reference or "",
-        subtopic=note.subtopic or "",
-        title=note.title,
-        content=note.content,
-        type=note.type or "concept"
-    )
-
-    db.add(new_note)
-    db.commit()
-    db.refresh(new_note)
-
-    return new_note
+    try:
+        new_note = Note(**note.dict())
+        db.add(new_note)
+        db.commit()
+        db.refresh(new_note)
+        return new_note
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # ✅ GET ALL

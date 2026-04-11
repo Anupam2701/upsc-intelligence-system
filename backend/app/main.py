@@ -5,10 +5,10 @@ from app.routes.note_routes import router as note_router
 
 app = FastAPI()
 
-# 🔥 VERY IMPORTANT (PUT BEFORE ROUTES)
+# 🔥 MUST BE FIRST (before routes)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # allow all for now
+    allow_origins=["*"],   # allow all origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -16,7 +16,6 @@ app.add_middleware(
 
 # ROUTES
 app.include_router(note_router)
-
 
 @app.get("/")
 def root():
