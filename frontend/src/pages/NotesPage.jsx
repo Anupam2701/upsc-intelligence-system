@@ -6,15 +6,18 @@ const API = "https://upsc-intelligence-system.onrender.com";
 export default function NotesPage() {
   const [notes, setNotes] = useState([]);
 
-  const [form, setForm] = useState({
+  const [selected, setSelected] = useState({
     subject: "",
     topic: "",
     reference: "",
-    subtopic: "",
-    title: "",
-    content: ""
   });
 
+  const [editor, setEditor] = useState({
+    title: "",
+    content: "",
+  });
+
+  // 🔥 FETCH
   const fetchNotes = async () => {
     const res = await axios.get(`${API}/notes/`);
     setNotes(res.data);
@@ -24,74 +27,104 @@ export default function NotesPage() {
     fetchNotes();
   }, []);
 
-  const handleAdd = async () => {
-  try {
-    const res = await axios.post(`${API}/notes/`, {
-      subject: form.subject || "",
-      topic: form.topic || "",
-      reference: form.reference || "",
-      subtopic: form.subtopic || "",
-      title: form.title || "Untitled",
-      content: form.content || "",
-      type: "concept"
-    });
+  // 🔥 AUTO SAVE
+  useEffect(() => {
+    if (!editor.content && !editor.title) return;
 
-    console.log("SUCCESS:", res.data);
+    const timeout = setTimeout(async () => {
+      try {
+        await axios.post(`${API}/notes/`, {
+          ...selected,
+          title: editor.title || "Untitled",
+          content: editor.content,
+        });
 
-    fetchNotes();
+        fetchNotes();
+      } catch (err) {
+        console.error(err);
+      }
+    }, 1000); // debounce
 
-  } catch (err) {
-    console.error("ADD NOTE ERROR:", err.response?.data || err.message);
-  }
-};
+    return () => clearTimeout(timeout);
+  }, [editor]);
 
-  const handleDelete = async (id) => {
-    await axios.delete(`${API}/notes/${id}`);
-    fetchNotes();
-  };
+  // 🔥 UNIQUE LISTS
+  const subjects = [...new Set(notes.map(n => n.subject))];
+  const topics = [...new Set(notes.filter(n => n.subject === selected.subject).map(n => n.topic))];
+  const references = [...new Set(notes.filter(n => n.topic === selected.topic).map(n => n.reference))];
 
   return (
-    <div className="p-6 text-white space-y-4">
+    <div className="flex h-screen text-white">
 
-      <h1 className="text-2xl font-bold">Notes</h1>
+      {/* LEFT PANEL */}
+      <div className="flex gap-4 w-1/3 p-4">
 
-      {/* FORM */}
-      <div className="space-y-2">
-        {Object.keys(form).map((key) => (
-          <input
-            key={key}
-            placeholder={key}
-            value={form[key]}
-            onChange={(e) =>
-              setForm({ ...form, [key]: e.target.value })
-            }
-            className="input w-full"
-          />
-        ))}
+        {/* SUBJECTS */}
+        <div className="w-1/3 space-y-2">
+          <h3 className="text-sm text-gray-400">Subjects</h3>
+          {subjects.map((s, i) => (
+            <div
+              key={i}
+              onClick={() => setSelected({ subject: s, topic: "", reference: "" })}
+              className={`p-2 rounded cursor-pointer ${
+                selected.subject === s ? "bg-indigo-600" : "bg-gray-800"
+              }`}
+            >
+              {s}
+            </div>
+          ))}
+        </div>
 
-        <button
-          onClick={handleAdd}
-          className="bg-indigo-500 px-4 py-2 rounded"
-        >
-          Add Note
-        </button>
+        {/* TOPICS */}
+        <div className="w-1/3 space-y-2">
+          <h3 className="text-sm text-gray-400">Topics</h3>
+          {topics.map((t, i) => (
+            <div
+              key={i}
+              onClick={() => setSelected({ ...selected, topic: t, reference: "" })}
+              className={`p-2 rounded cursor-pointer ${
+                selected.topic === t ? "bg-indigo-600" : "bg-gray-800"
+              }`}
+            >
+              {t}
+            </div>
+          ))}
+        </div>
+
+        {/* REFERENCES */}
+        <div className="w-1/3 space-y-2">
+          <h3 className="text-sm text-gray-400">Refs</h3>
+          {references.map((r, i) => (
+            <div
+              key={i}
+              onClick={() => setSelected({ ...selected, reference: r })}
+              className={`p-2 rounded cursor-pointer ${
+                selected.reference === r ? "bg-indigo-600" : "bg-gray-800"
+              }`}
+            >
+              {r}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* LIST */}
-      <div className="space-y-2">
-        {notes.map((n) => (
-          <div key={n.id} className="bg-gray-800 p-3 rounded">
-            <h3>{n.title}</h3>
-            <p className="text-sm text-gray-400">{n.content}</p>
+      {/* RIGHT PANEL (EDITOR) */}
+      <div className="flex-1 p-6 space-y-4">
 
-            <button
-              onClick={() => handleDelete(n.id)}
-              className="text-red-400 text-sm"
-            >
-              Delete
-            </button>
-          </div>
-        ))}
+        <input
+          placeholder="Title..."
+          value={editor.title}
+          onChange={(e) => setEditor({ ...editor, title: e.target.value })}
+          className="w-full bg-transparent text-xl outline-none"
+        />
+
+        <textarea
+          placeholder="Start writing..."
+          value={editor.content}
+          onChange={(e) => setEditor({ ...editor, content: e.target.value })}
+          className="w-full h-[70vh] bg-transparent outline-none text-gray-300"
+        />
+
       </div>
     </div>
   );
