@@ -4,7 +4,7 @@ from app.database import SessionLocal
 from app.models.note import Note
 from app.schemas.note import NoteCreate, NoteUpdate
 
-router = APIRouter(prefix="/notes")
+router = APIRouter()
 
 
 def get_db():
