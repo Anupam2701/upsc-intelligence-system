@@ -2,21 +2,19 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes.note_routes import router as note_router
-from app.database import Base, engine
-from app.models.note import Note
 
 app = FastAPI()
 
+# 🔥 VERY IMPORTANT (PUT BEFORE ROUTES)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],   # allow all for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-Base.metadata.create_all(bind=engine)
-
+# ROUTES
 app.include_router(note_router)
 
 
