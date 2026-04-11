@@ -15,4 +15,6 @@ class Note(Base):
     title = Column(String)
     content = Column(Text)
 
+    type = Column(String, default="concept")  # ✅ FIX
+
     created_at = Column(DateTime, default=datetime.utcnow)
