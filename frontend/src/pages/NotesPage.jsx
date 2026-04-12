@@ -45,56 +45,7 @@ export default function NotesPage() {
       n.title.toLowerCase().includes(search.toLowerCase())
     );
 
-  // 🔥 KEYBOARD SHORTCUTS
-  useEffect(() => {
-  const handleKey = (e) => {
-    if (e.key === "ArrowDown") {
-      setActiveIndex((prev) =>
-        Math.min(prev + 1, filteredNotes.length - 1)
-      );
-    }
-
-    if (e.key === "ArrowUp") {
-      setActiveIndex((prev) => Math.max(prev - 1, 0));
-    }
-
-    if (e.key === "Enter") {
-      if (filteredNotes[activeIndex]) {
-        openNote(filteredNotes[activeIndex]);
-      }
-    }
-
-    if (e.ctrlKey && e.key === "k") {
-      e.preventDefault();
-      setShowCommand((prev) => !prev);
-    }
-
-    if (e.ctrlKey && e.key === "s") {
-      e.preventDefault();
-      handleSave();
-    }
-  };
-
-  window.addEventListener("keydown", handleKey);
-  return () => window.removeEventListener("keydown", handleKey);
-}, [filteredNotes, activeIndex, handleSave]);
-
-  // 🔥 OPEN NOTE
-  const openNote = (note) => {
-    setSelectedNote(note);
-    setEditor({
-      title: note.title,
-      content: note.content,
-    });
-  };
-
-  // 🔥 NEW NOTE
-  const handleNew = () => {
-    setSelectedNote(null);
-    setEditor({ title: "", content: "" });
-  };
-
-  // 🔥 SAVE
+  // 🔥 SAVE (FIXED WITH useCallback)
   const handleSave = useCallback(async () => {
     try {
       if (selectedNote) {
@@ -114,22 +65,78 @@ export default function NotesPage() {
         });
       }
 
-      fetchNotes();
+      const res = await axios.get(`${API}/notes/`);
+      setNotes(res.data);
+
       setSaved(true);
       setTimeout(() => setSaved(false), 1200);
-      handleNew();
+
+      setSelectedNote(null);
+      setEditor({ title: "", content: "" });
 
     } catch (err) {
       console.error(err.response?.data || err.message);
     }
-  },[selectedNote, editor, selectedSubject]);
+  }, [selectedNote, editor, selectedSubject]);
+
+  // 🔥 KEYBOARD SHORTCUTS
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "ArrowDown") {
+        setActiveIndex((prev) =>
+          Math.min(prev + 1, filteredNotes.length - 1)
+        );
+      }
+
+      if (e.key === "ArrowUp") {
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
+      }
+
+      if (e.key === "Enter") {
+        if (filteredNotes[activeIndex]) {
+          openNote(filteredNotes[activeIndex]);
+        }
+      }
+
+      if (e.ctrlKey && e.key === "k") {
+        e.preventDefault();
+        setShowCommand((prev) => !prev);
+      }
+
+      if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [filteredNotes, activeIndex, handleSave]);
+
+  // 🔥 OPEN NOTE
+  const openNote = (note) => {
+    setSelectedNote(note);
+    setEditor({
+      title: note.title,
+      content: note.content,
+    });
+  };
+
+  // 🔥 NEW NOTE
+  const handleNew = () => {
+    setSelectedNote(null);
+    setEditor({ title: "", content: "" });
+  };
 
   // 🔥 DELETE
   const handleDelete = async () => {
     if (!selectedNote) return;
 
     await axios.delete(`${API}/notes/${selectedNote.id}`);
-    fetchNotes();
+
+    const res = await axios.get(`${API}/notes/`);
+    setNotes(res.data);
+
     handleNew();
   };
 
