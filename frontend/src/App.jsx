@@ -34,7 +34,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="flex bg-[#020617] min-h-screen">
+      <div className="flex bg-[#020617] min-h-screen text-white">
 
         {/* SIDEBAR */}
         <Sidebar />

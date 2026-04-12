@@ -150,7 +150,7 @@ export default function NotesPage() {
   };
 
   return (
-    <div className="flex h-screen text-white bg-[#0f0f0f]">
+    <div className="flex h-screen bg-[#020617] text-white">
 
       {/* LEFT PANEL */}
       <div className="w-1/4 p-4 space-y-4 border-r border-gray-800">

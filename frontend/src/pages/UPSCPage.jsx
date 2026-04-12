@@ -126,7 +126,7 @@ export default function UPSCPage() {
   };
 
   return (
-    <div className="flex h-screen bg-[#0f0f0f] text-white">
+    <div className="flex h-screen bg-[#020617] text-white">
 
       {/* LEFT SIDEBAR */}
       <div className="w-1/4 p-4 border-r border-gray-800 space-y-2">
@@ -151,11 +151,11 @@ export default function UPSCPage() {
       </div>
 
       {/* RIGHT CONTENT */}
-      <div className="flex-1 p-6 overflow-y-auto space-y-4">
-
-        {content[active]}
-
-      </div>
+      <div className="flex-1 p-6 overflow-y-auto">
+        <div className="bg-[#111827] border border-white/10 rounded-xl p-6">
+    {content[active]}
+        </div>
+    </div>
     </div>
   );
 }
