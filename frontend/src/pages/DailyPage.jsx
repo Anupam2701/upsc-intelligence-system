@@ -10,7 +10,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
   const totalTime = todaySessions.reduce((sum, s) => sum + s.duration, 0);
 
-  const goal = 300; // 5 hrs goal
+  const goal = 300;
   const progress = Math.min((totalTime / goal) * 100, 100);
 
   const avgQuality =
@@ -19,50 +19,65 @@ export default function DailyPage({ sessions, fetchSessions }) {
         todaySessions.length
       : 0;
 
-  const focusScore = Math.round(
-    (progress * 0.6) + (avgQuality * 20)
-  );
+  const focusScore = Math.round(progress * 0.6 + avgQuality * 20);
 
   const [form, setForm] = useState({
     date: today,
     subject: "",
     topic: "",
-    duration: "",
+    start_time: "",
+    end_time: "",
     quality_score: "",
-    revision: false,
   });
 
-const handleSubmit = async () => {
-  try {
-    await axios.post(`${API}/sessions/`, {
-      ...form,
-      duration: Number(form.duration),
-      quality_score: Number(form.quality_score),
-    });
+  // 🔥 AUTO DURATION
+  const calculateDuration = (start, end) => {
+    const s = new Date(`1970-01-01T${start}`);
+    const e = new Date(`1970-01-01T${end}`);
+    return (e - s) / (1000 * 60);
+  };
 
-    await fetchSessions(); // 🔥 wait for refresh
+  // 🔥 ADD SESSION
+  const handleSubmit = async () => {
+    try {
+      const duration = calculateDuration(form.start_time, form.end_time);
 
-    setForm({
-      date: today,
-      subject: "",
-      topic: "",
-      duration: "",
-      quality_score: "",
-      revision: false,
-    });
+      await axios.post(`${API}/sessions/`, {
+        ...form,
+        duration,
+        quality_score: Number(form.quality_score),
+        revision: false,
+      });
 
-  } catch (err) {
-    console.error("ADD SESSION ERROR:", err.response?.data || err.message);
-  }
-};
+      await fetchSessions();
+
+      setForm({
+        date: today,
+        subject: "",
+        topic: "",
+        start_time: "",
+        end_time: "",
+        quality_score: "",
+      });
+
+    } catch (err) {
+      console.error("ADD SESSION ERROR:", err.response?.data || err.message);
+    }
+  };
+
+  // 🔥 DELETE
+  const handleDelete = async (id) => {
+    await axios.delete(`${API}/sessions/${id}`);
+    fetchSessions();
+  };
 
   return (
     <div className="space-y-6 text-white">
 
-      {/* 🔥 HEADER */}
+      {/* HEADER */}
       <h1 className="text-3xl font-bold">Daily Command Center 🚀</h1>
 
-      {/* 🔥 STATS */}
+      {/* STATS */}
       <div className="grid md:grid-cols-3 gap-4">
 
         <div className="card">
@@ -71,7 +86,6 @@ const handleSubmit = async () => {
             {totalTime} min
           </h2>
 
-          {/* progress bar */}
           <div className="mt-2 w-full bg-white/10 rounded-full h-2">
             <div
               className="bg-indigo-500 h-2 rounded-full"
@@ -96,11 +110,12 @@ const handleSubmit = async () => {
 
       </div>
 
-      {/* 🔥 QUICK ADD (Notion style) */}
+      {/* QUICK ADD */}
       <div className="card space-y-3">
         <h3 className="font-semibold">Quick Add ⚡</h3>
 
         <div className="grid md:grid-cols-5 gap-3">
+
           <input
             placeholder="Subject"
             value={form.subject}
@@ -120,10 +135,19 @@ const handleSubmit = async () => {
           />
 
           <input
-            placeholder="Minutes"
-            value={form.duration}
+            type="time"
+            value={form.start_time}
             onChange={(e) =>
-              setForm({ ...form, duration: e.target.value })
+              setForm({ ...form, start_time: e.target.value })
+            }
+            className="input"
+          />
+
+          <input
+            type="time"
+            value={form.end_time}
+            onChange={(e) =>
+              setForm({ ...form, end_time: e.target.value })
             }
             className="input"
           />
@@ -137,35 +161,48 @@ const handleSubmit = async () => {
             className="input"
           />
 
-          <button
-            onClick={handleSubmit}
-            className="bg-indigo-500 hover:bg-indigo-600 rounded-lg"
-          >
-            Add
-          </button>
         </div>
+
+        <button
+          onClick={handleSubmit}
+          className="bg-indigo-500 hover:bg-indigo-600 rounded-lg px-4 py-2"
+        >
+          Add Session
+        </button>
       </div>
 
-      {/* 🔥 TIMELINE (Notion-like) */}
+      {/* TIMELINE */}
       <div className="card">
         <h3 className="mb-4 font-semibold">Timeline</h3>
 
         {todaySessions.length === 0 ? (
           <p className="text-gray-400">No sessions yet</p>
         ) : (
-          todaySessions.map((s, i) => (
+          todaySessions.map((s) => (
             <div
-              key={i}
+              key={s.id}
               className="flex items-center justify-between border-l-2 border-indigo-500 pl-4 mb-3"
             >
               <div>
-                <p className="font-medium">{s.subject}</p>
+                <p className="font-medium">
+                  {s.start_time} → {s.end_time}
+                </p>
+                <p className="text-sm">{s.subject}</p>
                 <p className="text-xs text-gray-400">{s.topic}</p>
               </div>
 
-              <span className="text-indigo-400">
-                {s.duration} min
-              </span>
+              <div className="flex gap-3 items-center">
+                <span className="text-indigo-400">
+                  {s.duration} min
+                </span>
+
+                <button
+                  onClick={() => handleDelete(s.id)}
+                  className="text-red-400 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         )}
