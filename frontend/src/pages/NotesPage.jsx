@@ -95,7 +95,7 @@ export default function NotesPage() {
   };
 
   // 🔥 SAVE
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     try {
       if (selectedNote) {
         await axios.put(`${API}/notes/${selectedNote.id}`, {
@@ -122,7 +122,7 @@ export default function NotesPage() {
     } catch (err) {
       console.error(err.response?.data || err.message);
     }
-  };
+  },[selectedNote, editor, selectedSubject]);
 
   // 🔥 DELETE
   const handleDelete = async () => {
