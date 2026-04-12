@@ -11,6 +11,7 @@ import CalendarPage from "./pages/CalendarPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import NotesPage from "./pages/NotesPage";
 import AIPage from "./pages/AIPage";
+import UPSCPage from "./pages/UPSCPage"; // 🔥 NEW
 
 const API = "https://upsc-intelligence-system.onrender.com";
 
@@ -35,29 +36,42 @@ export default function App() {
     <Router>
       <div className="flex bg-[#020617] min-h-screen">
 
-        {/* 🔥 SIDEBAR */}
+        {/* SIDEBAR */}
         <Sidebar />
 
-        {/* 🔥 MAIN CONTENT */}
+        {/* MAIN CONTENT */}
         <div className="ml-64 w-full p-6">
           <Routes>
+
             <Route path="/" element={<DashboardPage sessions={sessions} />} />
+
             <Route
-  path="/daily"
-  element={
-    <DailyPage
-      sessions={sessions}
-      fetchSessions={fetchSessions}
-    />
-  }
-/>
-            <Route path="/calendar" element={<CalendarPage sessions={sessions} />} />
+              path="/daily"
+              element={
+                <DailyPage
+                  sessions={sessions}
+                  fetchSessions={fetchSessions}
+                />
+              }
+            />
+
             <Route
-  path="/analytics"
-  element={<AnalyticsPage sessions={sessions} />}
-/>
+              path="/calendar"
+              element={<CalendarPage sessions={sessions} />}
+            />
+
+            <Route
+              path="/analytics"
+              element={<AnalyticsPage sessions={sessions} />}
+            />
+
             <Route path="/notes" element={<NotesPage />} />
+
             <Route path="/ai" element={<AIPage />} />
+
+            {/* 🔥 NEW UPSC PAGE */}
+            <Route path="/upsc" element={<UPSCPage />} />
+
           </Routes>
         </div>
 
