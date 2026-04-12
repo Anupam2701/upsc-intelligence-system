@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 const API = "https://upsc-intelligence-system.onrender.com";
@@ -7,9 +7,7 @@ const SUBJECTS = ["HISTORY", "POLITY", "GEOGRAPHY"];
 
 export default function NotesPage() {
   const [notes, setNotes] = useState([]);
-
   const [selectedSubject, setSelectedSubject] = useState("HISTORY");
-
   const [selectedNote, setSelectedNote] = useState(null);
 
   const [editor, setEditor] = useState({
@@ -17,7 +15,15 @@ export default function NotesPage() {
     content: "",
   });
 
-  // FETCH NOTES
+  const [search, setSearch] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [pinned, setPinned] = useState([]);
+  const [showCommand, setShowCommand] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const textRef = useRef();
+
+  // 🔥 FETCH
   const fetchNotes = async () => {
     const res = await axios.get(`${API}/notes/`);
     setNotes(res.data);
@@ -27,10 +33,51 @@ export default function NotesPage() {
     fetchNotes();
   }, []);
 
-  // FILTER
-  const filteredNotes = notes.filter(
-    (n) => n.subject === selectedSubject
-  );
+  // 🔥 AUTO FOCUS
+  useEffect(() => {
+    textRef.current?.focus();
+  }, [selectedNote]);
+
+  // 🔥 FILTER
+  const filteredNotes = notes
+    .filter((n) => n.subject === selectedSubject)
+    .filter((n) =>
+      n.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+  // 🔥 KEYBOARD SHORTCUTS
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "ArrowDown") {
+        setActiveIndex((prev) =>
+          Math.min(prev + 1, filteredNotes.length - 1)
+        );
+      }
+
+      if (e.key === "ArrowUp") {
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
+      }
+
+      if (e.key === "Enter") {
+        if (filteredNotes[activeIndex]) {
+          openNote(filteredNotes[activeIndex]);
+        }
+      }
+
+      if (e.ctrlKey && e.key === "k") {
+        e.preventDefault();
+        setShowCommand((prev) => !prev);
+      }
+
+      if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [filteredNotes, activeIndex, editor, selectedNote]);
 
   // 🔥 OPEN NOTE
   const openNote = (note) => {
@@ -47,17 +94,15 @@ export default function NotesPage() {
     setEditor({ title: "", content: "" });
   };
 
-  // 🔥 SAVE (CREATE OR UPDATE)
+  // 🔥 SAVE
   const handleSave = async () => {
     try {
       if (selectedNote) {
-        // UPDATE
         await axios.put(`${API}/notes/${selectedNote.id}`, {
           title: editor.title,
           content: editor.content,
         });
       } else {
-        // CREATE
         await axios.post(`${API}/notes/`, {
           subject: selectedSubject,
           topic: "",
@@ -70,6 +115,8 @@ export default function NotesPage() {
       }
 
       fetchNotes();
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1200);
       handleNew();
 
     } catch (err) {
@@ -82,13 +129,21 @@ export default function NotesPage() {
     if (!selectedNote) return;
 
     await axios.delete(`${API}/notes/${selectedNote.id}`);
-
     fetchNotes();
     handleNew();
   };
 
+  // 🔥 PIN
+  const togglePin = (id) => {
+    setPinned((prev) =>
+      prev.includes(id)
+        ? prev.filter((p) => p !== id)
+        : [...prev, id]
+    );
+  };
+
   return (
-    <div className="flex h-screen text-white">
+    <div className="flex h-screen text-white bg-[#0f0f0f]">
 
       {/* LEFT PANEL */}
       <div className="w-1/4 p-4 space-y-4 border-r border-gray-800">
@@ -102,38 +157,78 @@ export default function NotesPage() {
               setSelectedSubject(s);
               handleNew();
             }}
-            className={`p-3 rounded cursor-pointer ${
+            className={`p-3 rounded cursor-pointer transition-all duration-200 ${
               selectedSubject === s
                 ? "bg-indigo-600"
-                : "bg-gray-800"
+                : "bg-gray-800 hover:bg-gray-700"
             }`}
           >
             {s}
           </div>
         ))}
 
-        {/* NEW BUTTON */}
         <button
           onClick={handleNew}
-          className="bg-green-600 px-3 py-2 rounded w-full"
+          className="bg-green-600 px-3 py-2 rounded w-full hover:bg-green-500 transition"
         >
           + New Note
         </button>
 
-        {/* NOTES LIST */}
-        <div className="space-y-2 mt-4">
+        {/* SEARCH */}
+        <input
+          placeholder="Search notes..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full p-2 rounded bg-gray-900 outline-none text-sm"
+        />
 
-          {filteredNotes.map((n) => (
+        {/* PINNED */}
+        {pinned.length > 0 && (
+          <div>
+            <h3 className="text-xs text-gray-400 mb-1">Pinned</h3>
+            {notes
+              .filter((n) => pinned.includes(n.id))
+              .map((n) => (
+                <div key={n.id} className="text-yellow-400 text-sm">
+                  📌 {n.title}
+                </div>
+              ))}
+          </div>
+        )}
+
+        {/* EMPTY STATE */}
+        {filteredNotes.length === 0 && (
+          <div className="text-gray-500 text-sm mt-4">
+            No notes yet. Start writing ✍️
+          </div>
+        )}
+
+        {/* NOTES LIST */}
+        <div className="space-y-2 mt-2 max-h-[55vh] overflow-y-auto">
+
+          {filteredNotes.map((n, i) => (
             <div
               key={n.id}
               onClick={() => openNote(n)}
-              className={`p-2 rounded cursor-pointer ${
+              className={`group p-2 rounded cursor-pointer flex justify-between items-center transition-all duration-200 ${
                 selectedNote?.id === n.id
                   ? "bg-indigo-500"
-                  : "bg-gray-800"
+                  : i === activeIndex
+                  ? "bg-gray-700"
+                  : "bg-gray-800 hover:bg-gray-700"
               }`}
             >
-              {n.title}
+              <span>{n.title}</span>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  togglePin(n.id);
+                }}
+                className="text-yellow-400 opacity-0 group-hover:opacity-100 transition"
+              >
+                📌
+              </button>
             </div>
           ))}
 
@@ -143,36 +238,46 @@ export default function NotesPage() {
       {/* RIGHT PANEL */}
       <div className="flex-1 p-6 space-y-4">
 
+        <div className="text-xs text-gray-500">
+          {selectedSubject}
+        </div>
+
         <input
           placeholder="Title..."
           value={editor.title}
           onChange={(e) =>
             setEditor({ ...editor, title: e.target.value })
           }
-          className="w-full bg-transparent text-xl outline-none"
+          className="w-full bg-transparent text-3xl font-semibold tracking-tight outline-none"
         />
 
         <textarea
+          ref={textRef}
           placeholder="Start writing..."
           value={editor.content}
           onChange={(e) =>
             setEditor({ ...editor, content: e.target.value })
           }
-          className="w-full h-[70vh] bg-transparent outline-none text-gray-300"
+          className="w-full h-[70vh] bg-transparent outline-none text-gray-300 leading-relaxed"
         />
+
+        {/* SAVE FEEDBACK */}
+        {saved && (
+          <div className="text-green-400 text-sm">Saved ✓</div>
+        )}
 
         <div className="flex gap-3">
 
           <button
             onClick={handleSave}
-            className="bg-indigo-600 px-6 py-2 rounded"
+            className="bg-indigo-600 px-6 py-2 rounded hover:bg-indigo-500 transition"
           >
             Save
           </button>
 
           <button
             onClick={handleDelete}
-            className="bg-red-600 px-6 py-2 rounded"
+            className="bg-red-600 px-6 py-2 rounded hover:bg-red-500 transition"
           >
             Delete
           </button>
@@ -180,6 +285,19 @@ export default function NotesPage() {
         </div>
 
       </div>
+
+      {/* COMMAND PALETTE */}
+      {showCommand && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+          <div className="bg-gray-900 p-6 rounded w-1/3 border border-gray-800">
+            <input
+              placeholder="Search or create..."
+              className="w-full p-3 bg-gray-800 outline-none"
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
