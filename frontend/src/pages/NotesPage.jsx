@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 
 const API = "https://upsc-intelligence-system.onrender.com";
@@ -47,37 +47,37 @@ export default function NotesPage() {
 
   // 🔥 KEYBOARD SHORTCUTS
   useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === "ArrowDown") {
-        setActiveIndex((prev) =>
-          Math.min(prev + 1, filteredNotes.length - 1)
-        );
-      }
+  const handleKey = (e) => {
+    if (e.key === "ArrowDown") {
+      setActiveIndex((prev) =>
+        Math.min(prev + 1, filteredNotes.length - 1)
+      );
+    }
 
-      if (e.key === "ArrowUp") {
-        setActiveIndex((prev) => Math.max(prev - 1, 0));
-      }
+    if (e.key === "ArrowUp") {
+      setActiveIndex((prev) => Math.max(prev - 1, 0));
+    }
 
-      if (e.key === "Enter") {
-        if (filteredNotes[activeIndex]) {
-          openNote(filteredNotes[activeIndex]);
-        }
+    if (e.key === "Enter") {
+      if (filteredNotes[activeIndex]) {
+        openNote(filteredNotes[activeIndex]);
       }
+    }
 
-      if (e.ctrlKey && e.key === "k") {
-        e.preventDefault();
-        setShowCommand((prev) => !prev);
-      }
+    if (e.ctrlKey && e.key === "k") {
+      e.preventDefault();
+      setShowCommand((prev) => !prev);
+    }
 
-      if (e.ctrlKey && e.key === "s") {
-        e.preventDefault();
-        handleSave();
-      }
-    };
+    if (e.ctrlKey && e.key === "s") {
+      e.preventDefault();
+      handleSave();
+    }
+  };
 
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [filteredNotes, activeIndex, editor, selectedNote]);
+  window.addEventListener("keydown", handleKey);
+  return () => window.removeEventListener("keydown", handleKey);
+}, [filteredNotes, activeIndex, handleSave]);
 
   // 🔥 OPEN NOTE
   const openNote = (note) => {
