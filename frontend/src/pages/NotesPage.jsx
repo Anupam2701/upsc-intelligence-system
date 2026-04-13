@@ -283,6 +283,7 @@ export default function NotesPage() {
         {saved && (
           <div className="text-green-400 text-sm">Saved ✓</div>
         )}
+
         <div className="flex gap-3">
   <button onClick={handleSave} className="btn-primary">
     Save
@@ -295,7 +296,6 @@ export default function NotesPage() {
     Delete
   </button>
 </div>
-        
 
       </div>
 
