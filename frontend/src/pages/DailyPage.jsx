@@ -114,7 +114,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
       <div className="card space-y-3">
         <h3 className="font-semibold">Quick Add ⚡</h3>
 
-        <div className="grid md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
 
           <input
             placeholder="Subject"
@@ -122,7 +122,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
             onChange={(e) =>
               setForm({ ...form, subject: e.target.value })
             }
-            className="input"
+            className="input w-full"
           />
 
           <input

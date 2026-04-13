@@ -71,7 +71,7 @@ export default function CalendarView({ sessions }) {
 
       {/* 🔥 MONTH VIEW */}
       {mode === "month" && (
-        <div className="grid grid-cols-7 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
           {monthDays.map((day) => {
             const total = getTotal(day);
             const daySessions = getDaySessions(day);

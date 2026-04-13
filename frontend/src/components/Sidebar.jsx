@@ -22,6 +22,7 @@ export default function Sidebar({ collapsed }) {
         collapsed ? "w-20" : "w-64"
       } bg-[#020617] border-r border-white/10 p-4 transition-all duration-300`}
     >
+      <div className="h-full overflow-y-auto">
       <nav className="space-y-2 text-gray-400">
 
         <NavLink to="/" end className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ""}`}>
@@ -60,6 +61,7 @@ export default function Sidebar({ collapsed }) {
         </NavLink>
 
       </nav>
+      </div>
     </div>
   );
 }

@@ -19,6 +19,7 @@ const API = "https://upsc-intelligence-system.onrender.com";
 export default function App() {
   const [sessions, setSessions] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   // 🔥 Fetch sessions
   const fetchSessions = async () => {
@@ -38,18 +39,38 @@ export default function App() {
     <Router>
       <div className="bg-[#020617] min-h-screen text-white">
 
-        {/* 🔥 HEADER */}
-        <Header toggleSidebar={() => setCollapsed(!collapsed)} />
+  {/* HEADER */}
+  <Header toggleSidebar={() => setMobileOpen(true)} />
 
-        {/* 🔥 SIDEBAR */}
-        <Sidebar collapsed={collapsed} />
+  {/* DESKTOP SIDEBAR */}
+  <div className="hidden md:block">
+    <Sidebar collapsed={collapsed} />
+  </div>
 
-        {/* 🔥 MAIN CONTENT */}
-        <div
-          className={`pt-16 transition-all duration-300 ${
-            collapsed ? "ml-20" : "ml-64"
-          } p-6`}
-        >
+  {/* MOBILE SIDEBAR (DRAWER) */}
+  {mobileOpen && (
+    <div className="fixed inset-0 z-50 flex">
+
+      {/* BACKDROP */}
+      <div
+        className="absolute inset-0 bg-black/50"
+        onClick={() => setMobileOpen(false)}
+      />
+
+      {/* DRAWER */}
+      <div className="relative w-64 bg-[#020617] h-full p-4 z-50">
+        <Sidebar collapsed={false} />
+      </div>
+    </div>
+  )}
+
+  {/* MAIN CONTENT */}
+  <div
+    className={`
+      pt-16 p-4 md:p-6 transition-all duration-300
+      ${collapsed ? "md:ml-20" : "md:ml-64"}
+    `}
+  >
           <Routes>
 
             <Route path="/" element={<DashboardPage sessions={sessions} />} />
