@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.study_session import StudySession
@@ -18,7 +18,7 @@ def get_db():
 @router.post("/")
 def create_session(session: StudySessionCreate, db: Session = Depends(get_db)):
     if not session.subject or not session.start_time or not session.end_time:
-        return {"error": "Missing required fields"}
+        raise HTTPException(status_code=400, detail="Missing required fields")
 
     db_session = StudySession(**session.dict())
     db.add(db_session)
@@ -28,13 +28,13 @@ def create_session(session: StudySessionCreate, db: Session = Depends(get_db)):
     return db_session
 
 
-# ✅ GET ALL (ORDERED)
+# ✅ GET ALL
 @router.get("/")
 def get_sessions(db: Session = Depends(get_db)):
-    return db.query(StudySession).order_by(StudySession.created_at.desc()).all()
+    return db.query(StudySession).order_by(StudySession.id.desc()).all()
 
 
-# ✅ ANALYTICS (UPGRADED)
+# ✅ ANALYTICS
 @router.get("/analytics")
 def get_analytics(db: Session = Depends(get_db)):
     sessions = db.query(StudySession).all()
@@ -46,7 +46,7 @@ def get_analytics(db: Session = Depends(get_db)):
 
     for s in sessions:
         subject_data[s.subject] = subject_data.get(s.subject, 0) + s.duration
-        daily_data[s.date] = daily_data.get(s.date, 0) + s.duration
+        daily_data[str(s.date)] = daily_data.get(str(s.date), 0) + s.duration
 
     return {
         "total_minutes": total,
@@ -61,7 +61,7 @@ def delete_session(id: int, db: Session = Depends(get_db)):
     session = db.query(StudySession).filter(StudySession.id == id).first()
 
     if not session:
-        return {"error": "Session not found"}
+        raise HTTPException(status_code=404, detail="Session not found")
 
     db.delete(session)
     db.commit()
