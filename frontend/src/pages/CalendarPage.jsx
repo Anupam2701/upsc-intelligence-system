@@ -6,9 +6,10 @@ export default function CalendarPage({ sessions }) {
 
       {/* 🔥 HEADER */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Calendar
-        </h1>
+        <PageHeader
+  title="Calendar"
+  subtitle="Visualize your study consistency"
+/>
 
         <div className="text-sm text-gray-400">
           Track your consistency 📊

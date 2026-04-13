@@ -1,4 +1,7 @@
 import PageHeader from "../components/PageHeader";
 export default function AIPage() {
-  return <div className="text-white text-xl">AI Insights 🤖</div>;
+  return <PageHeader
+  title="AI Insights 🤖"
+  subtitle="Let AI help you succeed"
+/>;
 }

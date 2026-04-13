@@ -96,7 +96,11 @@ export default function AnalyticsPage({ sessions }) {
   return (
     <div className="space-y-6 text-white">
 
-      <h1 className="text-3xl font-bold">Analytics 📊</h1>
+      <PageHeader
+  title="Analytics 📊"
+  subtitle="Track your consistency"
+/>
+      
 
       {/* 🔥 STATS */}
       <div className="grid md:grid-cols-4 gap-4">

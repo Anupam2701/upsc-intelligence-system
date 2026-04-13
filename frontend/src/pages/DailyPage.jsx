@@ -76,7 +76,10 @@ export default function DailyPage({ sessions, fetchSessions }) {
     <div className="card">
 
       {/* HEADER */}
-      <h1 className="text-3xl font-bold">Daily Command Center 🚀</h1>
+      <PageHeader
+  title="Daily Command Center 🚀"
+  subtitle="Log sessions and track focus"
+/>
 
       {/* STATS */}
       <div className="grid md:grid-cols-3 gap-4">

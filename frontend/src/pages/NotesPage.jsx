@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
-import PageHeader from "../components/PageHeader";
+
 
 const API = "https://upsc-intelligence-system.onrender.com";
 
