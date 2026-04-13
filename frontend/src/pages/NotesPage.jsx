@@ -23,7 +23,7 @@ export default function NotesPage() {
 
   const textRef = useRef();
 
-  // 🔥 FETCH
+  // 🔥 FETCH NOTES
   const fetchNotes = async () => {
     const res = await axios.get(`${API}/notes/`);
     setNotes(res.data);
@@ -45,7 +45,7 @@ export default function NotesPage() {
       n.title.toLowerCase().includes(search.toLowerCase())
     );
 
-  // 🔥 SAVE (FIXED WITH useCallback)
+  // 🔥 SAVE
   const handleSave = useCallback(async () => {
     try {
       if (selectedNote) {
@@ -164,7 +164,7 @@ export default function NotesPage() {
               setSelectedSubject(s);
               handleNew();
             }}
-            className={`p-3 rounded cursor-pointer transition-all duration-200 ${
+            className={`p-3 rounded cursor-pointer transition ${
               selectedSubject === s
                 ? "bg-indigo-600"
                 : "bg-gray-800 hover:bg-gray-700"
@@ -176,7 +176,7 @@ export default function NotesPage() {
 
         <button
           onClick={handleNew}
-          className="bg-green-600 px-3 py-2 rounded w-full hover:bg-green-500 transition"
+          className="bg-green-600 px-3 py-2 rounded w-full hover:bg-green-500"
         >
           + New Note
         </button>
@@ -203,7 +203,7 @@ export default function NotesPage() {
           </div>
         )}
 
-        {/* EMPTY STATE */}
+        {/* EMPTY */}
         {filteredNotes.length === 0 && (
           <div className="text-gray-500 text-sm mt-4">
             No notes yet. Start writing ✍️
@@ -212,12 +212,11 @@ export default function NotesPage() {
 
         {/* NOTES LIST */}
         <div className="space-y-2 mt-2 max-h-[55vh] overflow-y-auto">
-
           {filteredNotes.map((n, i) => (
             <div
               key={n.id}
               onClick={() => openNote(n)}
-              className={`group p-2 rounded cursor-pointer flex justify-between items-center transition-all duration-200 ${
+              className={`group p-2 rounded cursor-pointer flex justify-between ${
                 selectedNote?.id === n.id
                   ? "bg-indigo-500"
                   : i === activeIndex
@@ -232,71 +231,56 @@ export default function NotesPage() {
                   e.stopPropagation();
                   togglePin(n.id);
                 }}
-                className="text-yellow-400 opacity-0 group-hover:opacity-100 transition"
+                className="text-yellow-400 opacity-0 group-hover:opacity-100"
               >
                 📌
               </button>
             </div>
           ))}
-
         </div>
       </div>
 
       {/* RIGHT PANEL */}
       <div className="flex-1 p-6">
-  <div className="card max-w-3xl space-y-4">
+        <div className="card max-w-3xl space-y-4">
 
-    <input
-      placeholder="Untitled"
-      value={editor.title}
-      onChange={(e) =>
-        setEditor({ ...editor, title: e.target.value })
-      }
-      className="w-full bg-transparent text-2xl font-semibold outline-none"
-    />
+          <input
+            placeholder="Untitled"
+            value={editor.title}
+            onChange={(e) =>
+              setEditor({ ...editor, title: e.target.value })
+            }
+            className="w-full bg-transparent text-2xl font-semibold outline-none"
+          />
 
-    <textarea
-      placeholder="Start writing..."
-      value={editor.content}
-      onChange={(e) =>
-        setEditor({ ...editor, content: e.target.value })
-      }
-      className="w-full h-[70vh] bg-transparent outline-none text-gray-300"
-    />
+          <textarea
+            ref={textRef}
+            placeholder="Start writing..."
+            value={editor.content}
+            onChange={(e) =>
+              setEditor({ ...editor, content: e.target.value })
+            }
+            className="w-full h-[70vh] bg-transparent outline-none text-gray-300"
+          />
 
-    <div className="flex gap-3">
-      <button onClick={handleSave} className="btn-primary">
-        Save
-      </button>
+          <div className="flex gap-3">
+            <button onClick={handleSave} className="btn-primary">
+              Save
+            </button>
 
-      <button
-        onClick={handleDelete}
-        className="bg-red-500 px-4 py-2 rounded-lg"
-      >
-        Delete
-      </button>
-    </div>
+            <button
+              onClick={handleDelete}
+              className="bg-red-500 px-4 py-2 rounded-lg"
+            >
+              Delete
+            </button>
+          </div>
 
-  </div>
+          {saved && (
+            <div className="text-green-400 text-sm">Saved ✓</div>
+          )}
 
-        {/* SAVE FEEDBACK */}
-        {saved && (
-          <div className="text-green-400 text-sm">Saved ✓</div>
-        )}
-
-        <div className="flex gap-3">
-  <button onClick={handleSave} className="btn-primary">
-    Save
-  </button>
-
-  <button
-    onClick={handleDelete}
-    className="bg-red-500 px-4 py-2 rounded-lg"
-  >
-    Delete
-  </button>
-</div>
-
+        </div>
       </div>
 
       {/* COMMAND PALETTE */}
