@@ -73,7 +73,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
   };
 
   return (
-    <div className="card">
+    <div className="max-w-7xl mx-auto space-y-6">
 
       {/* HEADER */}
       <PageHeader
