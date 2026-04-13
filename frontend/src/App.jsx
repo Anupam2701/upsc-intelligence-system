@@ -74,11 +74,11 @@ export default function App() {
 
   {/* MAIN CONTENT */}
   <div
-    className={`
-      pt-16 p-4 md:p-6 transition-all duration-300
-      ${collapsed ? "md:ml-20" : "md:ml-64"}
-    `}
-  >
+  className={`pt-16 p-4 md:p-6 w-full transition-all duration-300 
+  ${collapsed ? "ml-16" : "ml-64"}
+  bg-gradient-to-br from-[#020617] via-[#020617] to-[#0f172a]
+`}
+>
           <Routes>
 
             <Route path="/" element={<DashboardPage sessions={sessions} />} />

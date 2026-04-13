@@ -17,7 +17,7 @@ export default function UPSCPage() {
   const content = {
 
     Overview: (
-      <div>
+      <div className="max-w-7xl mx-auto">
         <PageHeader
   title="UPSC Hub"
   subtitle="Everything about UPSC CSE"

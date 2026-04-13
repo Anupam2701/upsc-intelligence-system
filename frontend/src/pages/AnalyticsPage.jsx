@@ -94,7 +94,7 @@ export default function AnalyticsPage({ sessions }) {
   };
 
   return (
-    <div className="space-y-6 text-white">
+    <div className="max-w-7xl mx-auto">
 
       <PageHeader
   title="Analytics 📊"

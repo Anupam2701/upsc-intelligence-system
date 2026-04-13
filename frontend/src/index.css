@@ -24,10 +24,11 @@ body {
 
 /* 🔥 CARD */
 .card {
-  @apply bg-[#111827]/70 backdrop-blur-xl 
+  @apply bg-white/5 backdrop-blur-xl 
   border border-white/10 
   rounded-2xl p-5 
-  shadow-lg hover:shadow-2xl;
+  shadow-lg transition 
+  hover:shadow-2xl hover:bg-white/10;
 }
 
 /* 🔥 INPUT */

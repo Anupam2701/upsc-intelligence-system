@@ -5,7 +5,7 @@ export default function CalendarPage({ sessions }) {
     <div className="hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/20">
 
       {/* 🔥 HEADER */}
-      <div className="flex justify-between items-center">
+      <div className="max-w-7xl mx-auto">
         <PageHeader
   title="Calendar"
   subtitle="Visualize your study consistency"
