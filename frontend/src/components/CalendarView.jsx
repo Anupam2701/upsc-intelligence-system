@@ -120,7 +120,15 @@ export default function CalendarView({ sessions }) {
         const daySessions = sessions.filter((s) => s.date === day);
 
         return (
-          <div key={day} className="flex flex-col items-center gap-2">
+          <div
+                  key={day}
+                  onClick={() => {
+                    setSelectedDate(day);
+                    setMode("day");
+                  }}
+                  className="flex flex-col items-center gap-2 cursor-pointer"
+                >
+
 
             {/* 🔥 STACKED BARS */}
             <div className="flex flex-col justify-end gap-[2px] h-40">
