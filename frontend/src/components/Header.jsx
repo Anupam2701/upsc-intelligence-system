@@ -2,7 +2,10 @@ import { Menu } from "lucide-react";
 
 export default function Header({ toggleSidebar }) {
   return (
-    <div className="fixed top-0 left-0 w-full h-16 bg-[#020617]/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-6 z-50">
+    <div className="fixed top-0 left-0 right-0 h-16 
+bg-[#020617]/80 backdrop-blur-xl border-b border-white/10 
+flex items-center justify-between px-4 md:px-6 z-[100]">
+    
 
       {/* LEFT */}
       <div className="flex items-center gap-3">

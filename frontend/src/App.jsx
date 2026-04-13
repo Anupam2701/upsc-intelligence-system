@@ -36,49 +36,47 @@ export default function App() {
   }, []);
 
   return (
-    <Router>
-      <div className="bg-[#020617] min-h-screen text-white">
+  <Router>
+    <div className="flex">
 
-  {/* HEADER */}
-  <Header
-  toggleSidebar={() => {
-    if (window.innerWidth < 768) {
-      setMobileOpen(true);
-    } else {
-      setCollapsed(!collapsed);
-    }
-  }}
-/>
-
-  {/* DESKTOP SIDEBAR */}
-  <div className="hidden md:block">
-    <Sidebar collapsed={collapsed} />
-  </div>
-
-  {/* MOBILE SIDEBAR (DRAWER) */}
-  {mobileOpen && (
-    <div className="fixed inset-0 z-50 flex">
-
-      {/* BACKDROP */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={() => setMobileOpen(false)}
-      />
-
-      {/* DRAWER */}
-      <div className="relative w-64 bg-[#020617] h-full p-4 z-50">
-        <Sidebar collapsed={false} />
+      {/* SIDEBAR */}
+      <div className="hidden md:block">
+        <Sidebar collapsed={collapsed} />
       </div>
-    </div>
-  )}
 
-  {/* MAIN CONTENT */}
-  <div
-  className={`pt-20 p-4 md:p-6 w-full transition-all duration-300 
-  ${collapsed ? "ml-16" : "ml-64"}
-  bg-gradient-to-br from-[#020617] via-[#020617] to-[#0f172a]
-`}
->
+      {/* MAIN AREA */}
+      <div className="flex-1 bg-[#020617] min-h-screen text-white">
+
+        {/* HEADER */}
+        <Header
+          toggleSidebar={() => {
+            if (window.innerWidth < 768) {
+              setMobileOpen(true);
+            } else {
+              setCollapsed(!collapsed);
+            }
+          }}
+        />
+
+        {/* MOBILE DRAWER */}
+        {mobileOpen && (
+          <div className="fixed inset-0 z-50 flex">
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => setMobileOpen(false)}
+            />
+            <div className="relative w-64 bg-[#020617] h-full p-4 z-50">
+              <Sidebar collapsed={false} />
+            </div>
+          </div>
+        )}
+
+        {/* CONTENT */}
+        <div
+          className={`pt-24 px-4 md:px-6 pb-6 transition-all duration-300
+          ${collapsed ? "md:ml-16" : "md:ml-64"}
+          `}
+        >
           <Routes>
 
             <Route path="/" element={<DashboardPage sessions={sessions} />} />
@@ -104,15 +102,14 @@ export default function App() {
             />
 
             <Route path="/notes" element={<NotesPage />} />
-
             <Route path="/ai" element={<AIPage />} />
-
             <Route path="/upsc" element={<UPSCPage />} />
 
           </Routes>
         </div>
 
       </div>
-    </Router>
-  );
+    </div>
+  </Router>
+);
 }
