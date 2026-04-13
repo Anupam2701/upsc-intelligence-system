@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
 
 // Pages
 import DashboardPage from "./pages/DashboardPage";
@@ -11,12 +12,13 @@ import CalendarPage from "./pages/CalendarPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import NotesPage from "./pages/NotesPage";
 import AIPage from "./pages/AIPage";
-import UPSCPage from "./pages/UPSCPage"; // 🔥 NEW
+import UPSCPage from "./pages/UPSCPage";
 
 const API = "https://upsc-intelligence-system.onrender.com";
 
 export default function App() {
   const [sessions, setSessions] = useState([]);
+  const [collapsed, setCollapsed] = useState(false);
 
   // 🔥 Fetch sessions
   const fetchSessions = async () => {
@@ -34,13 +36,20 @@ export default function App() {
 
   return (
     <Router>
-      <div className="flex bg-[#020617] min-h-screen text-white">
+      <div className="bg-[#020617] min-h-screen text-white">
 
-        {/* SIDEBAR */}
-        <Sidebar />
+        {/* 🔥 HEADER */}
+        <Header toggleSidebar={() => setCollapsed(!collapsed)} />
 
-        {/* MAIN CONTENT */}
-        <div className="ml-64 w-full p-6">
+        {/* 🔥 SIDEBAR */}
+        <Sidebar collapsed={collapsed} />
+
+        {/* 🔥 MAIN CONTENT */}
+        <div
+          className={`pt-16 transition-all duration-300 ${
+            collapsed ? "ml-20" : "ml-64"
+          } p-6`}
+        >
           <Routes>
 
             <Route path="/" element={<DashboardPage sessions={sessions} />} />
@@ -69,7 +78,6 @@ export default function App() {
 
             <Route path="/ai" element={<AIPage />} />
 
-            {/* 🔥 NEW UPSC PAGE */}
             <Route path="/upsc" element={<UPSCPage />} />
 
           </Routes>
