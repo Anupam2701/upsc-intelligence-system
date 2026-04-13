@@ -283,24 +283,19 @@ export default function NotesPage() {
         {saved && (
           <div className="text-green-400 text-sm">Saved ✓</div>
         )}
-
         <div className="flex gap-3">
+  <button onClick={handleSave} className="btn-primary">
+    Save
+  </button>
 
-          <button
-            onClick={handleSave}
-            className="bg-indigo-600 px-6 py-2 rounded hover:bg-indigo-500 transition"
-          >
-            Save
-          </button>
-
-          <button
-            onClick={handleDelete}
-            className="bg-red-600 px-6 py-2 rounded hover:bg-red-500 transition"
-          >
-            Delete
-          </button>
-
-        </div>
+  <button
+    onClick={handleDelete}
+    className="bg-red-500 px-4 py-2 rounded-lg"
+  >
+    Delete
+  </button>
+</div>
+        
 
       </div>
 
