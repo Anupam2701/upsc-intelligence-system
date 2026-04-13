@@ -20,8 +20,21 @@ export default function UPSCPage() {
         <h2 className="title">UPSC CSE Overview</h2>
 
         <p className="text">
-          UPSC Civil Services Examination is one of the toughest exams in India.
-          It recruits candidates for IAS, IPS, IFS, IRS and more.
+          The Civil Services Examination (CSE) is a nationwide competitive examination conducted by the Union Public Service Commission (UPSC) for recruitment to various Civil Services of the Government of India. Often considered one of the toughest examinations in the world, it is the gateway to prestigious administrative roles including the Indian Administrative Service (IAS), Indian Police Service (IPS), Indian Foreign Service (IFS), and Indian Revenue Service (IRS), among others (totaling around 24 services).
+
+Conducting Body: Union Public Service Commission (UPSC)
+
+Frequency: Annual
+
+Eligibility: * Nationality: Must be a citizen of India (for IAS and IPS). Other services have broader criteria.
+
+Education: A bachelor's degree from a recognized university.
+
+Age Limit: 21 to 32 years for General Category (relaxations apply: OBC up to 35 years, SC/ST up to 37 years).
+
+Attempts: General (6), OBC (9), SC/ST (Unlimited up to age limit).
+
+Examination Stages: The exam is conducted in three phases—Prelims, Mains, and Interview.
         </p>
 
         <ul className="list">
