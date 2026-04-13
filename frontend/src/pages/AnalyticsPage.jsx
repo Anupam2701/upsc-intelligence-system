@@ -1,3 +1,4 @@
+import PageHeader from "../components/PageHeader";
 import {
   Chart as ChartJS,
   BarElement,

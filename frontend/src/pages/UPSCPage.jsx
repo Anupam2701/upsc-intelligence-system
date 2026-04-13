@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PageHeader from "../components/PageHeader";
 
 const sections = [
   "Overview",
@@ -17,7 +18,10 @@ export default function UPSCPage() {
 
     Overview: (
       <div>
-        <h2 className="title">UPSC CSE Overview</h2>
+        <PageHeader
+  title="UPSC Hub"
+  subtitle="Everything about UPSC CSE"
+/>
 
         <p className="text">
           The Civil Services Examination (CSE) is a nationwide competitive examination conducted by the Union Public Service Commission (UPSC) for recruitment to various Civil Services of the Government of India. Often considered one of the toughest examinations in the world, it is the gateway to prestigious administrative roles including the Indian Administrative Service (IAS), Indian Police Service (IPS), Indian Foreign Service (IFS), and Indian Revenue Service (IRS), among others (totaling around 24 services).

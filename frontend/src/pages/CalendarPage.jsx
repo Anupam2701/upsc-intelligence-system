@@ -1,5 +1,5 @@
 import CalendarView from "../components/CalendarView";
-
+import PageHeader from "../components/PageHeader";
 export default function CalendarPage({ sessions }) {
   return (
     <div className="hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/20">
