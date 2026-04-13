@@ -30,11 +30,11 @@ export default function UPSCPage() {
         <ul className="list">
           <li>Conducted by: UPSC</li>
           <li>Eligibility:</li>
-          <ul>
-            <li>* Nationality: Must be a citizen of India (for IAS and IPS). Other services have broader criteria</li>
+          <ol>
+            <li>*Nationality: Must be a citizen of India (for IAS and IPS). Other services have broader criteria</li>
             <li>Education: A bachelor's degree from a recognized university.</li>
             <li>Age Limit: 21 to 32 years for General Category (relaxations apply: OBC up to 35 years, SC/ST up to 37 years).</li>
-          </ul>
+          </ol>
           <li>Attempts: General (6), OBC (9), SC/ST (Unlimited up to age limit).</li>
           <li>Examination Stages: The exam is conducted in three phases—Prelims, Mains, and Interview</li>
         </ul>
