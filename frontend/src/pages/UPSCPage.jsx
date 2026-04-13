@@ -21,27 +21,18 @@ export default function UPSCPage() {
 
         <p className="text">
           The Civil Services Examination (CSE) is a nationwide competitive examination conducted by the Union Public Service Commission (UPSC) for recruitment to various Civil Services of the Government of India. Often considered one of the toughest examinations in the world, it is the gateway to prestigious administrative roles including the Indian Administrative Service (IAS), Indian Police Service (IPS), Indian Foreign Service (IFS), and Indian Revenue Service (IRS), among others (totaling around 24 services).
-
-Conducting Body: Union Public Service Commission (UPSC)
-
-Frequency: Annual
-
-Eligibility: * Nationality: Must be a citizen of India (for IAS and IPS). Other services have broader criteria.
-
-Education: A bachelor's degree from a recognized university.
-
-Age Limit: 21 to 32 years for General Category (relaxations apply: OBC up to 35 years, SC/ST up to 37 years).
-
-Attempts: General (6), OBC (9), SC/ST (Unlimited up to age limit).
-
-Examination Stages: The exam is conducted in three phases—Prelims, Mains, and Interview.
         </p>
 
         <ul className="list">
           <li>Conducted by: UPSC</li>
-          <li>Frequency: Annual</li>
-          <li>Age: 21–32 (relaxations apply)</li>
-          <li>Attempts: 6 (General)</li>
+          <li>Eligibility:</li>
+          <ul>
+            <li>* Nationality: Must be a citizen of India (for IAS and IPS). Other services have broader criteria</li>
+            <li>Education: A bachelor's degree from a recognized university.</li>
+            <li>Age Limit: 21 to 32 years for General Category (relaxations apply: OBC up to 35 years, SC/ST up to 37 years).</li>
+          </ul>
+          <li>Attempts: General (6), OBC (9), SC/ST (Unlimited up to age limit).</li>
+          <li>Examination Stages: The exam is conducted in three phases—Prelims, Mains, and Interview</li>
         </ul>
       </div>
     ),
@@ -51,10 +42,10 @@ Examination Stages: The exam is conducted in three phases—Prelims, Mains, and 
         <h2 className="title">Prelims</h2>
 
         <ul className="list">
-          <li>GS Paper 1 (200 marks)</li>
-          <li>CSAT (qualifying)</li>
+          <li>GS-I(General Studies) Paper 1 (200 marks) (2 Hours): determines the cutoff for qualifying for the mains</li>
+          <li>GS-II CSAT(Civil Services Aptitude Test) Paper 2 (200 marks) (qualifying : score of minimum 33% of total makrs)</li>
           <li>MCQ based</li>
-          <li>Negative marking: 1/3</li>
+          <li>Negative marking: 1/3 for both paper</li>
         </ul>
       </div>
     ),
