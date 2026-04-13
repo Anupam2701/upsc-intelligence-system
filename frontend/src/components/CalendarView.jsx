@@ -113,47 +113,56 @@ export default function CalendarView({ sessions }) {
 
       {/* 🔥 WEEK VIEW */}
       {mode === "week" && (
-        <div className="card p-6">
-          <div className="flex justify-between items-end h-56">
+  <div className="card p-6">
+    <div className="flex justify-between items-end h-56">
 
-            {last7Days.map((day) => {
-              const daySessions = getSessionsByDate(day);
+      {last7Days.map((day) => {
+        const daySessions = sessions.filter((s) => s.date === day);
 
-              return (
-                <div
-                  key={day}
-                  onClick={() => {
-                    setSelectedDate(day);
-                    setMode("day");
-                  }}
-                  className="flex flex-col items-center gap-2 cursor-pointer"
-                >
+        return (
+          <div key={day} className="flex flex-col items-center gap-2">
 
-                  <div className="flex flex-col justify-end gap-[2px] h-40">
-                    {daySessions.map((s, idx) => (
-                      <div
-                        key={idx}
-                        className="w-8 rounded-md"
-                        style={{
-                          height: `${s.duration / 2}px`,
-                          background: getColorFromString(s.subject),
-                        }}
-                        title={`${s.subject} • ${s.topic}`}
-                      />
-                    ))}
-                  </div>
+            {/* 🔥 STACKED BARS */}
+            <div className="flex flex-col justify-end gap-[2px] h-40">
 
-                  <span className="text-xs text-gray-400">
-                    {day.slice(5)}
-                  </span>
+              {daySessions.map((s, idx) => {
+                // 🎨 dynamic color based on subject
+                const color = getColorFromString(s.subject);
 
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={idx}
+                    className="w-8 rounded-md transition hover:scale-110"
+                    style={{
+                      height: `${s.duration / 2}px`,
+                      background: color,
+                    }}
+                    title={`${s.subject} • ${s.topic} • ${s.duration} min`}
+                  />
+                );
+              })}
+
+            </div>
+
+            {/* 📅 DATE */}
+            <span className="text-xs text-gray-400">
+              {day.slice(5)}
+            </span>
+
+            {/* 🧠 SUBJECT LABELS */}
+            <div className="text-[10px] text-center text-gray-300 space-y-[1px]">
+              {daySessions.map((s, i) => (
+                <div key={i}>{s.subject}</div>
+              ))}
+            </div>
 
           </div>
-        </div>
-      )}
+        );
+      })}
+
+    </div>
+  </div>
+)}
 
       {/* 🔥 DAY VIEW */}
       {mode === "day" && (
