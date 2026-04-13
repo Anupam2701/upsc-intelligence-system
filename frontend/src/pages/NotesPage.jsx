@@ -243,30 +243,41 @@ export default function NotesPage() {
       </div>
 
       {/* RIGHT PANEL */}
-      <div className="flex-1 p-6 space-y-4">
+      <div className="flex-1 p-6">
+  <div className="card max-w-3xl space-y-4">
 
-        <div className="text-xs text-gray-500">
-          {selectedSubject}
-        </div>
+    <input
+      placeholder="Untitled"
+      value={editor.title}
+      onChange={(e) =>
+        setEditor({ ...editor, title: e.target.value })
+      }
+      className="w-full bg-transparent text-2xl font-semibold outline-none"
+    />
 
-        <input
-          placeholder="Title..."
-          value={editor.title}
-          onChange={(e) =>
-            setEditor({ ...editor, title: e.target.value })
-          }
-          className="w-full bg-transparent text-3xl font-semibold tracking-tight outline-none"
-        />
+    <textarea
+      placeholder="Start writing..."
+      value={editor.content}
+      onChange={(e) =>
+        setEditor({ ...editor, content: e.target.value })
+      }
+      className="w-full h-[70vh] bg-transparent outline-none text-gray-300"
+    />
 
-        <textarea
-          ref={textRef}
-          placeholder="Start writing..."
-          value={editor.content}
-          onChange={(e) =>
-            setEditor({ ...editor, content: e.target.value })
-          }
-          className="w-full h-[70vh] bg-transparent outline-none text-gray-300 leading-relaxed"
-        />
+    <div className="flex gap-3">
+      <button onClick={handleSave} className="btn-primary">
+        Save
+      </button>
+
+      <button
+        onClick={handleDelete}
+        className="bg-red-500 px-4 py-2 rounded-lg"
+      >
+        Delete
+      </button>
+    </div>
+
+  </div>
 
         {/* SAVE FEEDBACK */}
         {saved && (

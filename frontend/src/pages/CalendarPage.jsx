@@ -2,7 +2,7 @@ import CalendarView from "../components/CalendarView";
 
 export default function CalendarPage({ sessions }) {
   return (
-    <div className="text-white p-6 space-y-6 bg-[#0f0f0f] min-h-screen">
+    <div className="hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/20">
 
       {/* 🔥 HEADER */}
       <div className="flex justify-between items-center">

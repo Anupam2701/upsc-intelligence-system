@@ -2,16 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 🔥 GLOBAL */
 body {
-  @apply bg-[#0f172a] text-gray-200;
+  @apply bg-[#020617] text-gray-200;
   font-family: 'Inter', sans-serif;
 }
 
-.card {
-  @apply bg-white/5 backdrop-blur-xl border border-white/10 
-  rounded-2xl p-5 shadow-lg transition hover:shadow-2xl;
+/* 🔥 SMOOTH UI */
+* {
+  transition: all 0.2s ease;
 }
 
+/* 🔥 SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+}
+
+/* 🔥 CARD */
+.card {
+  @apply bg-[#111827]/70 backdrop-blur-xl 
+  border border-white/10 
+  rounded-2xl p-5 
+  shadow-lg hover:shadow-2xl;
+}
+
+/* 🔥 INPUT */
 .input {
-  @apply p-2 rounded-lg bg-slate-800 border border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500;
+  @apply p-2 rounded-lg 
+  bg-white/5 border border-white/10 
+  focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+/* 🔥 BUTTON */
+.btn-primary {
+  @apply px-4 py-2 rounded-lg 
+  bg-gradient-to-r from-indigo-500 to-purple-500 
+  hover:opacity-90;
+}
+
+/* 🔥 TEXT */
+.title {
+  @apply text-2xl font-semibold tracking-tight;
+}
+
+.text {
+  @apply text-gray-300 leading-relaxed;
 }

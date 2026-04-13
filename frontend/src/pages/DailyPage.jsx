@@ -72,7 +72,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
   };
 
   return (
-    <div className="space-y-6 text-white">
+    <div className="card">
 
       {/* HEADER */}
       <h1 className="text-3xl font-bold">Daily Command Center 🚀</h1>

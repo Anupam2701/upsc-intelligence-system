@@ -151,11 +151,11 @@ export default function UPSCPage() {
       </div>
 
       {/* RIGHT CONTENT */}
-      <div className="flex-1 p-6 overflow-y-auto">
-        <div className="bg-[#111827] border border-white/10 rounded-xl p-6">
+      <div className="flex-1 p-6">
+  <div className="card max-w-3xl">
     {content[active]}
-        </div>
-    </div>
+  </div>
+</div>
     </div>
   );
 }

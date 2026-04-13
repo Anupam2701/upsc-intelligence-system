@@ -14,7 +14,7 @@ export default function Sidebar() {
     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 hover:bg-white/10";
 
   const activeClass =
-    "bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white";
+    "bg-[#0b1220]/80 backdrop-blur-xl";
 
   return (
     <div className="w-64 h-screen fixed left-0 top-0 bg-[#020617] border-r border-white/10 p-5 flex flex-col justify-between">
