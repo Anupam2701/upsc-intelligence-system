@@ -40,7 +40,15 @@ export default function App() {
       <div className="bg-[#020617] min-h-screen text-white">
 
   {/* HEADER */}
-  <Header toggleSidebar={() => setMobileOpen(true)} />
+  <Header
+  toggleSidebar={() => {
+    if (window.innerWidth < 768) {
+      setMobileOpen(true);
+    } else {
+      setCollapsed(!collapsed);
+    }
+  }}
+/>
 
   {/* DESKTOP SIDEBAR */}
   <div className="hidden md:block">
