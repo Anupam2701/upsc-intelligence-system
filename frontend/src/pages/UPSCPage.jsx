@@ -24,7 +24,7 @@ export default function UPSCPage() {
 
       <div className="flex gap-6">
 
-        {/* 🔥 LEFT MENU */}
+        {/* LEFT MENU */}
         <div className="w-56 space-y-2">
           {SECTIONS.map((s) => (
             <div
@@ -42,183 +42,211 @@ export default function UPSCPage() {
           ))}
         </div>
 
-        {/* 🔥 RIGHT CONTENT */}
-        <div className="flex-1 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* RIGHT CONTENT */}
+        <div className="flex-1 space-y-4">
 
-          {/* OVERVIEW */}
+          {/* ================= OVERVIEW ================= */}
           {active === "Overview" && (
-            <>
+            <div className="grid md:grid-cols-2 gap-4">
+
               <div className="card">
                 <h3 className="font-semibold mb-2">Overview</h3>
-                <p className="text-sm text-gray-400">
-                  UPSC CSE recruits IAS, IPS, IFS, IRS.
+                <p className="text-sm text-gray-400 mb-2">
+                  UPSC Civil Services Examination is one of the toughest exams in India. 
+                  It recruits candidates for IAS, IPS, IFS, IRS and more.
                 </p>
-                <ul className="text-sm mt-2 space-y-1 text-gray-300">
+                <ul className="text-sm space-y-1 text-gray-300">
                   <li>• Conducted by UPSC</li>
-                  <li>• Annual Exam</li>
-                  <li>• Age: 21–32</li>
-                  <li>• Attempts: 6(General)</li>
+                  <li>• Frequency: Annual</li>
+                  <li>• Age: 21–32 (relaxations apply)</li>
+                  <li>• Attempts: 6 (General)</li>
                 </ul>
               </div>
 
               <div className="card">
                 <h3 className="font-semibold mb-2">Stages</h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400">
                   Prelims → Mains → Interview
                 </p>
               </div>
-            </>
+
+            </div>
           )}
 
-          {/* PRELIMS */}
+          {/* ================= PRELIMS ================= */}
           {active === "Prelims" && (
-            <>
+            <div className="grid md:grid-cols-2 gap-4">
+
               <div className="card">
-                <h3 className="font-semibold mb-2">Paper I GS(General Studies)</h3>
-                <p className="text-sm text-gray-400">
+                <h3 className="font-semibold mb-2">Paper I (GS)</h3>
+                <p className="text-gray-400">
                   200 marks, 100 questions
                 </p>
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">Paper II CSAT(Civil Services Aptitude Test)</h3>
-                <p className="text-sm text-gray-400">
-                  Qualifying (33%) #Only if a candidate gets greater than or equals to 33% in CSAT, GS-I will be evaluated for Merit
+                <h3 className="font-semibold mb-2">Paper II (CSAT)</h3>
+                <p className="text-gray-400">
+                  200 marks, 80 questions (Qualifying 33%)
                 </p>
               </div>
-            </>
+
+            </div>
           )}
 
-          {/* MAINS */}
+          {/* ================= MAINS ================= */}
           {active === "Mains" && (
-            <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+
               <div className="card">
-                <h3 className="font-semibold mb-2">Structure</h3>
-                <p className="text-sm text-gray-400">
-                  9 papers total
-                </p>
+                <h3 className="font-semibold">Total Papers</h3>
+                <p className="text-gray-400">9 Papers</p>
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">GS(General Studies) Papers</h3>
-                <p className="text-sm text-gray-400">
-                  GS I–IV (250 marks each)
-                </p>
+                <h3 className="font-semibold">GS Papers</h3>
+                <p className="text-gray-400">GS I–IV (250 marks each)</p>
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">2 Compulsary Language Paper (English + Any one from the pool of 22 Indian languages) (Minimum 25% to qualify)</h3>
-                <p className="text-sm text-gray-400">
-                  300 marks each
-                </p>
+                <h3 className="font-semibold">Essay</h3>
+                <p className="text-gray-400">250 marks</p>
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">Optional (Paper 1 and Paper 2)</h3>
-                <p className="text-sm text-gray-400">
-                  250 marks each
-                </p>
+                <h3 className="font-semibold">Optional</h3>
+                <p className="text-gray-400">2 Papers (250 each)</p>
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">Essay</h3>
-                <p className="text-sm text-gray-400">
-                  250 marks
-                </p>
+                <h3 className="font-semibold">Language Papers</h3>
+                <p className="text-gray-400">English + Indian Language</p>
               </div>
-            </>
+
+            </div>
           )}
 
-          {/* INTERVIEW */}
+          {/* ================= INTERVIEW ================= */}
           {active === "Interview" && (
             <div className="card">
               <h3 className="font-semibold mb-2">Personality Test</h3>
-              <p className="text-sm text-gray-400">
-                275 marks, evaluates suitability for civil services.
+              <p className="text-gray-400">
+                275 Marks. Evaluates suitability for civil services.
               </p>
             </div>
           )}
 
-          {/* MAINS GS */}
-{active === "Syllabus" && (
-  <>
-    <div className="card">
-      <h3 className="font-semibold mb-4">Mains GS (General Studies)</h3>
-    </div>
-    <div classname = "card">
-      <h3 className="font-medium text-gray-300 mb-2">Qualifying Papers (Not counted for final ranking):</h3>
-        <ul className="list-disc list-outside pl-5 space-y-1">
-          <li>
-            <span className="font-medium text-gray-300">Paper A:</span> One of the Indian Languages (included in the 8th Schedule) - 300 Marks (Minimum 25% to qualify).
-          </li>
-          <li>
-            <span className="font-medium text-gray-300">Paper B:</span> English - 300 Marks (Minimum 25% to qualify).
-          </li>
-        </ul>
-    </div>
-    
+          {/* ================= SYLLABUS ================= */}
+          {active === "Syllabus" && (
+            <div className="space-y-4">
 
-    <div classname = "card">
-      <h3 className="font-medium text-gray-300 mb-2">Merit Papers (Counted for final ranking):</h3>
-        <ul className="list-disc list-outside pl-5 space-y-1">
-          <li><span className="font-medium text-gray-300">Paper I:</span> Essay (250 Marks)</li>
-          <li><span className="font-medium text-gray-300">Paper II (GS-I):</span> Indian Heritage and Culture, History and Geography of the World and Society (250 Marks)</li>
-          <li><span className="font-medium text-gray-300">Paper III (GS-II):</span> Governance, Constitution, Polity, Social Justice, and International Relations (250 Marks)</li>
-          <li><span className="font-medium text-gray-300">Paper IV (GS-III):</span> Technology, Economic Development, Biodiversity, Environment, Security, and Disaster Management (250 Marks)</li>
-          <li><span className="font-medium text-gray-300">Paper V (GS-IV):</span> Ethics, Integrity, and Aptitude (250 Marks)</li>
-          <li><span className="font-medium text-gray-300">Paper VI (Optional Paper 1):</span> Subject chosen by the candidate (250 Marks)</li>
-          <li><span className="font-medium text-gray-300">Paper VII (Optional Paper 2):</span> Subject chosen by the candidate (250 Marks)</li>
-        </ul>
-    </div>
-        
-    <div classname = "card">
-      <h3>Total Mains Marks: 1750</h3>
-      <h3>GRAND TOTAL MARKS: 1750 (Written) + 275 (Interview) = 2025</h3>
-    </div>
-    
-  </>
-)}
+              {/* TITLE */}
+              <div className="card">
+                <h3 className="font-semibold text-lg">
+                  Mains GS (General Studies)
+                </h3>
+              </div>
 
-{/* OPTIONAL */}
-{active === "Optional" && (
-  <div className="card">
-    <h3 className="font-semibold mb-3">Optional Subject</h3>
-    <div className="text-sm text-gray-400 space-y-3">
-      <p>
-        Choose <span className="font-medium text-gray-300">one</span> subject (Total 500 marks via two papers). Candidates can choose from a list of roughly 48 subjects, which include:
-      </p>
-      
-      <ul className="list-disc list-outside pl-5 space-y-2">
-        <li>
-          <span className="font-medium text-gray-300">Academic Subjects:</span> Agriculture, Anthropology, Economics, Geography, History, Law, Management, Mathematics, Philosophy, Physics, Political Science & International Relations (PSIR), Public Administration, Sociology, Zoology, and various Engineering disciplines.
-        </li>
-        <li>
-          <span className="font-medium text-gray-300">Literature Subjects:</span> Candidates can also choose the literature of a language as their optional (e.g., English, Hindi, Maithili, Malayalam, Tamil, Urdu, etc.).
-        </li>
-      </ul>
-    </div>
-  </div>
-)}
-          {/* STRATEGY */}
+              {/* GRID */}
+              <div className="grid lg:grid-cols-2 gap-4">
+
+                {/* QUALIFYING */}
+                <div className="card">
+                  <h3 className="font-medium text-gray-300 mb-3">
+                    Qualifying Papers (Not counted for final ranking):
+                  </h3>
+
+                  <ul className="list-disc pl-5 space-y-2 text-gray-400 text-sm">
+                    <li>
+                      <span className="text-gray-300 font-medium">Paper A:</span> 
+                      One of the Indian Languages (included in the 8th Schedule) - 300 Marks 
+                      (Minimum 25% to qualify)
+                    </li>
+
+                    <li>
+                      <span className="text-gray-300 font-medium">Paper B:</span> 
+                      English - 300 Marks (Minimum 25% to qualify)
+                    </li>
+                  </ul>
+                </div>
+
+                {/* MERIT */}
+                <div className="card">
+                  <h3 className="font-medium text-gray-300 mb-3">
+                    Merit Papers (Counted for final ranking):
+                  </h3>
+
+                  <ul className="list-disc pl-5 space-y-2 text-gray-400 text-sm">
+                    <li>Paper I: Essay (250 Marks)</li>
+                    <li>Paper II (GS-I): History, Geography, Society (250)</li>
+                    <li>Paper III (GS-II): Polity, Governance, IR (250)</li>
+                    <li>Paper IV (GS-III): Economy, Env, Tech, Security (250)</li>
+                    <li>Paper V (GS-IV): Ethics (250)</li>
+                    <li>Paper VI: Optional Paper 1 (250)</li>
+                    <li>Paper VII: Optional Paper 2 (250)</li>
+                  </ul>
+                </div>
+
+              </div>
+
+              {/* TOTAL */}
+              <div className="card text-center">
+                <h3 className="text-lg font-semibold">
+                  Total Mains Marks: 1750
+                </h3>
+                <p className="text-gray-400">
+                  GRAND TOTAL: 1750 (Written) + 275 (Interview) = 2025
+                </p>
+              </div>
+
+            </div>
+          )}
+
+          {/* ================= OPTIONAL ================= */}
+          {active === "Optional" && (
+            <div className="card space-y-3">
+              <h3 className="font-semibold">Optional Subject</h3>
+
+              <p className="text-gray-400 text-sm">
+                Choose one subject (Total 500 marks via two papers).
+              </p>
+
+              <ul className="list-disc pl-5 text-gray-400 text-sm space-y-2">
+                <li>
+                  Academic Subjects: Agriculture, Anthropology, Economics,
+                  Geography, History, Law, Philosophy, Sociology, etc.
+                </li>
+
+                <li>
+                  Literature Subjects: English, Hindi, Tamil, Urdu, etc.
+                </li>
+              </ul>
+            </div>
+          )}
+
+          {/* ================= STRATEGY ================= */}
           {active === "Strategy" && (
-            <>
+            <div className="grid md:grid-cols-2 gap-4">
+
               <div className="card">
                 <h3 className="font-semibold mb-2">Preparation</h3>
-                <ul className="text-sm text-gray-400 space-y-1">
-                  <li>• NCERTs</li>
-                  <li>• Standard Books</li>
-                  <li>• Current Affairs</li>
+                <ul className="text-gray-400 text-sm space-y-1">
+                  <li>• NCERT Foundation</li>
+                  <li>• Standard Textbooks</li>
+                  <li>• Daily Current Affairs</li>
                 </ul>
               </div>
 
               <div className="card">
                 <h3 className="font-semibold mb-2">Practice</h3>
-                <ul className="text-sm text-gray-400 space-y-1">
+                <ul className="text-gray-400 text-sm space-y-1">
                   <li>• Answer Writing</li>
                   <li>• Mock Tests</li>
+                  <li>• Revision</li>
                 </ul>
               </div>
-            </>
+
+            </div>
           )}
 
         </div>
