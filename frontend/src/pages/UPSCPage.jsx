@@ -144,8 +144,6 @@ export default function UPSCPage() {
   <>
     <div className="card">
       <h3 className="font-semibold mb-4">Mains GS (General Studies)</h3>
-      
-      <div className="space-y-4 text-sm text-gray-400">
         <div classname = "card">
           <p className="font-medium text-gray-300 mb-2">Qualifying Papers (Not counted for final ranking):</p>
           <ul className="list-disc list-outside pl-5 space-y-1">
@@ -171,13 +169,10 @@ export default function UPSCPage() {
           </ul>
         </div>
         <div classname = "card">
-        <div className="pt-2 border-t border-gray-700 font-semibold text-gray-200">
           <p>Total Mains Marks: 1750</p>
           <p>GRAND TOTAL MARKS: 1750 (Written) + 275 (Interview) = 2025</p>
         </div>
       </div>
-      </div>
-    </div>
   </>
 )}
 
