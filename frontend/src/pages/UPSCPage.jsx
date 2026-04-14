@@ -139,65 +139,67 @@ export default function UPSCPage() {
             </div>
           )}
 
-          {/* SYLLABUS */}
-          {active === "Syllabus" && (
-            <>
-              <div className="card">
-                <h3 className="font-semibold mb-2">Prelims GS</h3>
-                <p className="text-sm text-gray-400">
-                  GS-I: Current events of national and international importance, History of India and Indian National Movement, Indian and World Geography, Indian Polity and Governance, Economic and Social Development, Environmental Ecology, Biodiversity, Climate Change, and General Science
-                  CSAT: Comprehension, Interpersonal skills, Logical reasoning, Analytical ability, Decision-making, Problem-solving, Basic numeracy (Class X level), and Data interpretation (Class X level)
-                </p>
-              </div>
+          {/* MAINS GS */}
+{active === "Mains" && (
+  <>
+    <div className="card">
+      <h3 className="font-semibold mb-4">Mains GS (General Studies)</h3>
+      
+      <div className="space-y-4 text-sm text-gray-400">
+        <div>
+          <p className="font-medium text-gray-300 mb-2">Qualifying Papers (Not counted for final ranking):</p>
+          <ul className="list-disc list-outside pl-5 space-y-1">
+            <li>
+              <span className="font-medium text-gray-300">Paper A:</span> One of the Indian Languages (included in the 8th Schedule) - 300 Marks (Minimum 25% to qualify).
+            </li>
+            <li>
+              <span className="font-medium text-gray-300">Paper B:</span> English - 300 Marks (Minimum 25% to qualify).
+            </li>
+          </ul>
+        </div>
 
-              <div className="card">
-                <h3 className="font-semibold mb-2">Mains GS(General Studies)</h3>
-                <p className="text-sm text-gray-400">
-                  Qualifying Papers (Not counted for final ranking):
+        <div>
+          <p className="font-medium text-gray-300 mb-2">Merit Papers (Counted for final ranking):</p>
+          <ul className="list-disc list-outside pl-5 space-y-1">
+            <li><span className="font-medium text-gray-300">Paper I:</span> Essay (250 Marks)</li>
+            <li><span className="font-medium text-gray-300">Paper II (GS-I):</span> Indian Heritage and Culture, History and Geography of the World and Society (250 Marks)</li>
+            <li><span className="font-medium text-gray-300">Paper III (GS-II):</span> Governance, Constitution, Polity, Social Justice, and International Relations (250 Marks)</li>
+            <li><span className="font-medium text-gray-300">Paper IV (GS-III):</span> Technology, Economic Development, Biodiversity, Environment, Security, and Disaster Management (250 Marks)</li>
+            <li><span className="font-medium text-gray-300">Paper V (GS-IV):</span> Ethics, Integrity, and Aptitude (250 Marks)</li>
+            <li><span className="font-medium text-gray-300">Paper VI (Optional Paper 1):</span> Subject chosen by the candidate (250 Marks)</li>
+            <li><span className="font-medium text-gray-300">Paper VII (Optional Paper 2):</span> Subject chosen by the candidate (250 Marks)</li>
+          </ul>
+        </div>
 
-                  Paper A: One of the Indian Languages (included in the 8th Schedule) - 300 Marks (Minimum 25% to qualify).
+        <div className="pt-2 border-t border-gray-700 font-semibold text-gray-200">
+          <p>Total Mains Marks: 1750</p>
+          <p>GRAND TOTAL MARKS: 1750 (Written) + 275 (Interview) = 2025</p>
+        </div>
+      </div>
+    </div>
+  </>
+)}
 
-                  Paper B: English - 300 Marks (Minimum 25% to qualify).
-
-                  Merit Papers (Counted for final ranking):
-
-                  Paper I: Essay (250 Marks)
-
-                  Paper II (GS-I): Indian Heritage and Culture, History and Geography of the World and Society (250 Marks)
-
-                  Paper III (GS-II): Governance, Constitution, Polity, Social Justice, and International Relations (250 Marks)
-
-                  Paper IV (GS-III): Technology, Economic Development, Biodiversity, Environment, Security, and Disaster Management (250 Marks)
-
-                  Paper V (GS-IV): Ethics, Integrity, and Aptitude (250 Marks)
-
-                  Paper VI (Optional Paper 1): Subject chosen by the candidate (250 Marks)
-
-                  Paper VII (Optional Paper 2): Subject chosen by the candidate (250 Marks)
-
-                  Total Mains Marks: 1750
-
-                  GRAND TOTAL MARKS: 1750(GS) + 275(INTERVIEW) = 2025
-                </p>
-              </div>
-            </>
-          )}
-
-          {/* OPTIONAL */}
-          {active === "Optional" && (
-            <div className="card">
-              <h3 className="font-semibold mb-2">Optional Subject</h3>
-              <p className="text-sm text-gray-400">
-                Choose one subject (500 marks)
-                Candidates can choose from a list of roughly 48 subjects, which include:
-
-                Academic Subjects: Agriculture, Anthropology, Economics, Geography, History, Law, Management, Mathematics, Philosophy, Physics, Political Science & International Relations (PSIR), Public Administration, Sociology, Zoology, and various Engineering disciplines.
-
-                Literature Subjects: Candidates can also choose the literature of a language as their optional (e.g., English, Hindi, Maithili, Malayalam, Tamil, Urdu, etc.).
-              </p>
-            </div>
-          )}
-
+{/* OPTIONAL */}
+{active === "Optional" && (
+  <div className="card">
+    <h3 className="font-semibold mb-3">Optional Subject</h3>
+    <div className="text-sm text-gray-400 space-y-3">
+      <p>
+        Choose <span className="font-medium text-gray-300">one</span> subject (Total 500 marks via two papers). Candidates can choose from a list of roughly 48 subjects, which include:
+      </p>
+      
+      <ul className="list-disc list-outside pl-5 space-y-2">
+        <li>
+          <span className="font-medium text-gray-300">Academic Subjects:</span> Agriculture, Anthropology, Economics, Geography, History, Law, Management, Mathematics, Philosophy, Physics, Political Science & International Relations (PSIR), Public Administration, Sociology, Zoology, and various Engineering disciplines.
+        </li>
+        <li>
+          <span className="font-medium text-gray-300">Literature Subjects:</span> Candidates can also choose the literature of a language as their optional (e.g., English, Hindi, Maithili, Malayalam, Tamil, Urdu, etc.).
+        </li>
+      </ul>
+    </div>
+  </div>
+)}
           {/* STRATEGY */}
           {active === "Strategy" && (
             <>
