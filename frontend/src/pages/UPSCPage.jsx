@@ -144,35 +144,38 @@ export default function UPSCPage() {
   <>
     <div className="card">
       <h3 className="font-semibold mb-4">Mains GS (General Studies)</h3>
-        <div classname = "card">
-          <p className="font-medium text-gray-300 mb-2">Qualifying Papers (Not counted for final ranking):</p>
-          <ul className="list-disc list-outside pl-5 space-y-1">
-            <li>
-              <span className="font-medium text-gray-300">Paper A:</span> One of the Indian Languages (included in the 8th Schedule) - 300 Marks (Minimum 25% to qualify).
-            </li>
-            <li>
-              <span className="font-medium text-gray-300">Paper B:</span> English - 300 Marks (Minimum 25% to qualify).
-            </li>
-          </ul>
-        </div>
+    </div>
+    <div classname = "card">
+      <h3 className="font-medium text-gray-300 mb-2">Qualifying Papers (Not counted for final ranking):</h3>
+        <ul className="list-disc list-outside pl-5 space-y-1">
+          <li>
+            <span className="font-medium text-gray-300">Paper A:</span> One of the Indian Languages (included in the 8th Schedule) - 300 Marks (Minimum 25% to qualify).
+          </li>
+          <li>
+            <span className="font-medium text-gray-300">Paper B:</span> English - 300 Marks (Minimum 25% to qualify).
+          </li>
+        </ul>
+    </div>
+    
 
-        <div classname = "card">
-          <p className="font-medium text-gray-300 mb-2">Merit Papers (Counted for final ranking):</p>
-          <ul className="list-disc list-outside pl-5 space-y-1">
-            <li><span className="font-medium text-gray-300">Paper I:</span> Essay (250 Marks)</li>
-            <li><span className="font-medium text-gray-300">Paper II (GS-I):</span> Indian Heritage and Culture, History and Geography of the World and Society (250 Marks)</li>
-            <li><span className="font-medium text-gray-300">Paper III (GS-II):</span> Governance, Constitution, Polity, Social Justice, and International Relations (250 Marks)</li>
-            <li><span className="font-medium text-gray-300">Paper IV (GS-III):</span> Technology, Economic Development, Biodiversity, Environment, Security, and Disaster Management (250 Marks)</li>
-            <li><span className="font-medium text-gray-300">Paper V (GS-IV):</span> Ethics, Integrity, and Aptitude (250 Marks)</li>
-            <li><span className="font-medium text-gray-300">Paper VI (Optional Paper 1):</span> Subject chosen by the candidate (250 Marks)</li>
-            <li><span className="font-medium text-gray-300">Paper VII (Optional Paper 2):</span> Subject chosen by the candidate (250 Marks)</li>
-          </ul>
-        </div>
-        <div classname = "card">
-          <p>Total Mains Marks: 1750</p>
-          <p>GRAND TOTAL MARKS: 1750 (Written) + 275 (Interview) = 2025</p>
-        </div>
-      </div>
+    <div classname = "card">
+      <h3 className="font-medium text-gray-300 mb-2">Merit Papers (Counted for final ranking):</h3>
+        <ul className="list-disc list-outside pl-5 space-y-1">
+          <li><span className="font-medium text-gray-300">Paper I:</span> Essay (250 Marks)</li>
+          <li><span className="font-medium text-gray-300">Paper II (GS-I):</span> Indian Heritage and Culture, History and Geography of the World and Society (250 Marks)</li>
+          <li><span className="font-medium text-gray-300">Paper III (GS-II):</span> Governance, Constitution, Polity, Social Justice, and International Relations (250 Marks)</li>
+          <li><span className="font-medium text-gray-300">Paper IV (GS-III):</span> Technology, Economic Development, Biodiversity, Environment, Security, and Disaster Management (250 Marks)</li>
+          <li><span className="font-medium text-gray-300">Paper V (GS-IV):</span> Ethics, Integrity, and Aptitude (250 Marks)</li>
+          <li><span className="font-medium text-gray-300">Paper VI (Optional Paper 1):</span> Subject chosen by the candidate (250 Marks)</li>
+          <li><span className="font-medium text-gray-300">Paper VII (Optional Paper 2):</span> Subject chosen by the candidate (250 Marks)</li>
+        </ul>
+    </div>
+        
+    <div classname = "card">
+      <h3>Total Mains Marks: 1750</h3>
+      <h3>GRAND TOTAL MARKS: 1750 (Written) + 275 (Interview) = 2025</h3>
+    </div>
+    
   </>
 )}
 
