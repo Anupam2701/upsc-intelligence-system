@@ -140,7 +140,7 @@ export default function UPSCPage() {
           )}
 
           {/* MAINS GS */}
-{active === "Mains" && (
+{active === "Syllabus" && (
   <>
     <div className="card">
       <h3 className="font-semibold mb-4">Mains GS (General Studies)</h3>
