@@ -146,7 +146,7 @@ export default function UPSCPage() {
       <h3 className="font-semibold mb-4">Mains GS (General Studies)</h3>
       
       <div className="space-y-4 text-sm text-gray-400">
-        <div>
+        <div classname = "card">
           <p className="font-medium text-gray-300 mb-2">Qualifying Papers (Not counted for final ranking):</p>
           <ul className="list-disc list-outside pl-5 space-y-1">
             <li>
@@ -158,7 +158,7 @@ export default function UPSCPage() {
           </ul>
         </div>
 
-        <div>
+        <div classname = "card">
           <p className="font-medium text-gray-300 mb-2">Merit Papers (Counted for final ranking):</p>
           <ul className="list-disc list-outside pl-5 space-y-1">
             <li><span className="font-medium text-gray-300">Paper I:</span> Essay (250 Marks)</li>
@@ -170,11 +170,12 @@ export default function UPSCPage() {
             <li><span className="font-medium text-gray-300">Paper VII (Optional Paper 2):</span> Subject chosen by the candidate (250 Marks)</li>
           </ul>
         </div>
-
+        <div classname = "card">
         <div className="pt-2 border-t border-gray-700 font-semibold text-gray-200">
           <p>Total Mains Marks: 1750</p>
           <p>GRAND TOTAL MARKS: 1750 (Written) + 275 (Interview) = 2025</p>
         </div>
+      </div>
       </div>
     </div>
   </>
