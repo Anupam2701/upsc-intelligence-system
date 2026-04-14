@@ -57,7 +57,7 @@ export default function UPSCPage() {
                   <li>• Conducted by UPSC</li>
                   <li>• Annual Exam</li>
                   <li>• Age: 21–32</li>
-                  <li>• Attempts: 6</li>
+                  <li>• Attempts: 6(General)</li>
                 </ul>
               </div>
 
@@ -74,16 +74,16 @@ export default function UPSCPage() {
           {active === "Prelims" && (
             <>
               <div className="card">
-                <h3 className="font-semibold mb-2">Paper I (GS)</h3>
+                <h3 className="font-semibold mb-2">Paper I GS(General Studies)</h3>
                 <p className="text-sm text-gray-400">
                   200 marks, 100 questions
                 </p>
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">Paper II (CSAT)</h3>
+                <h3 className="font-semibold mb-2">Paper II CSAT(Civil Services Aptitude Test)</h3>
                 <p className="text-sm text-gray-400">
-                  Qualifying (33%)
+                  Qualifying (33%) #Only if a candidate gets greater than or equals to 33% in CSAT, GS-I will be evaluated for Merit
                 </p>
               </div>
             </>
@@ -100,9 +100,23 @@ export default function UPSCPage() {
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">GS Papers</h3>
+                <h3 className="font-semibold mb-2">GS(General Studies) Papers</h3>
                 <p className="text-sm text-gray-400">
                   GS I–IV (250 marks each)
+                </p>
+              </div>
+
+              <div className="card">
+                <h3 className="font-semibold mb-2">2 Compulsary Language Paper (English + Any one from the pool of 22 Indian languages) (Minimum 25% to qualify)</h3>
+                <p className="text-sm text-gray-400">
+                  300 marks each
+                </p>
+              </div>
+
+              <div className="card">
+                <h3 className="font-semibold mb-2">Optional (Paper 1 and Paper 2)</h3>
+                <p className="text-sm text-gray-400">
+                  250 marks each
                 </p>
               </div>
 
@@ -131,14 +145,39 @@ export default function UPSCPage() {
               <div className="card">
                 <h3 className="font-semibold mb-2">Prelims GS</h3>
                 <p className="text-sm text-gray-400">
-                  History, Geography, Polity, Economy, Environment
+                  GS-I: Current events of national and international importance, History of India and Indian National Movement, Indian and World Geography, Indian Polity and Governance, Economic and Social Development, Environmental Ecology, Biodiversity, Climate Change, and General Science
+                  CSAT: Comprehension, Interpersonal skills, Logical reasoning, Analytical ability, Decision-making, Problem-solving, Basic numeracy (Class X level), and Data interpretation (Class X level)
                 </p>
               </div>
 
               <div className="card">
-                <h3 className="font-semibold mb-2">Mains GS</h3>
+                <h3 className="font-semibold mb-2">Mains GS(General Studies)</h3>
                 <p className="text-sm text-gray-400">
-                  GS I–IV + Essay
+                  Qualifying Papers (Not counted for final ranking):
+
+                  Paper A: One of the Indian Languages (included in the 8th Schedule) - 300 Marks (Minimum 25% to qualify).
+
+                  Paper B: English - 300 Marks (Minimum 25% to qualify).
+
+                  Merit Papers (Counted for final ranking):
+
+                  Paper I: Essay (250 Marks)
+
+                  Paper II (GS-I): Indian Heritage and Culture, History and Geography of the World and Society (250 Marks)
+
+                  Paper III (GS-II): Governance, Constitution, Polity, Social Justice, and International Relations (250 Marks)
+
+                  Paper IV (GS-III): Technology, Economic Development, Biodiversity, Environment, Security, and Disaster Management (250 Marks)
+
+                  Paper V (GS-IV): Ethics, Integrity, and Aptitude (250 Marks)
+
+                  Paper VI (Optional Paper 1): Subject chosen by the candidate (250 Marks)
+
+                  Paper VII (Optional Paper 2): Subject chosen by the candidate (250 Marks)
+
+                  Total Mains Marks: 1750
+
+                  GRAND TOTAL MARKS: 1750(GS) + 275(INTERVIEW) = 2025
                 </p>
               </div>
             </>
@@ -150,6 +189,11 @@ export default function UPSCPage() {
               <h3 className="font-semibold mb-2">Optional Subject</h3>
               <p className="text-sm text-gray-400">
                 Choose one subject (500 marks)
+                Candidates can choose from a list of roughly 48 subjects, which include:
+
+                Academic Subjects: Agriculture, Anthropology, Economics, Geography, History, Law, Management, Mathematics, Philosophy, Physics, Political Science & International Relations (PSIR), Public Administration, Sociology, Zoology, and various Engineering disciplines.
+
+                Literature Subjects: Candidates can also choose the literature of a language as their optional (e.g., English, Hindi, Maithili, Malayalam, Tamil, Urdu, etc.).
               </p>
             </div>
           )}
