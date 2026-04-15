@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import PageHeader from "../components/PageHeader";
 
@@ -9,7 +9,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  //const tomorrow = tomorrowDate.toISOString().split("T")[0];
+  const tomorrow = tomorrowDate.toISOString().split("T")[0]; // ✅ FIXED
 
   const todaySessions = sessions.filter((s) => s.date === today);
 
@@ -40,34 +40,48 @@ export default function DailyPage({ sessions, fetchSessions }) {
   const [todayInput, setTodayInput] = useState("");
   const [tomorrowInput, setTomorrowInput] = useState("");
 
-  // ================= TODO FUNCTIONS =================
-  const addTodo = (type) => {
+  // ================= FETCH TODOS =================
+  const fetchTodos = async () => {
+    const res = await axios.get(`${API}/todos/`);
+    setTodos(res.data);
+  };
+
+  useEffect(() => {
+    fetchTodos();
+
+    // 🔥 AUTO ROLLOVER
+    axios.post(`${API}/todos/rollover`);
+  }, []);
+
+  // ================= ADD TODO =================
+  const addTodo = async (type) => {
     const text = type === "today" ? todayInput : tomorrowInput;
     if (!text) return;
 
-    const newTodo = {
-      id: Date.now(),
-      text,
-      type,
-      completed: false,
-    };
+    const date = type === "today" ? today : tomorrow;
 
-    setTodos([newTodo, ...todos]);
+    await axios.post(`${API}/todos/`, {
+      text,
+      date,
+      type,
+    });
+
+    fetchTodos();
 
     if (type === "today") setTodayInput("");
     else setTomorrowInput("");
   };
 
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
-    );
+  // ================= TOGGLE =================
+  const toggleTodo = async (id) => {
+    await axios.put(`${API}/todos/${id}`);
+    fetchTodos();
   };
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((t) => t.id !== id));
+  // ================= DELETE =================
+  const deleteTodo = async (id) => {
+    await axios.delete(`${API}/todos/${id}`);
+    fetchTodos();
   };
 
   // ================= AUTO DURATION =================
@@ -105,7 +119,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
     }
   };
 
-  // ================= DELETE =================
+  // ================= DELETE SESSION =================
   const handleDelete = async (id) => {
     await axios.delete(`${API}/sessions/${id}`);
     fetchSessions();
@@ -114,7 +128,6 @@ export default function DailyPage({ sessions, fetchSessions }) {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
 
-      {/* HEADER */}
       <PageHeader
         title="Daily Command Center 🚀"
         subtitle="Log sessions and track focus"
@@ -156,7 +169,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
       {/* ================= TODO SECTION ================= */}
       <div className="grid md:grid-cols-2 gap-4">
 
-        {/* TODAY TODO */}
+        {/* TODAY */}
         <div className="card space-y-3">
           <h3 className="font-semibold">Today's Plan ☀️</h3>
 
@@ -173,7 +186,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
           </div>
 
           {todos
-            .filter((t) => t.type === "today")
+            .filter((t) => t.date === today)
             .map((t) => (
               <div key={t.id} className="flex justify-between items-center">
                 <div
@@ -195,7 +208,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
             ))}
         </div>
 
-        {/* TOMORROW TODO */}
+        {/* TOMORROW */}
         <div className="card space-y-3">
           <h3 className="font-semibold">Tomorrow Plan 🌙</h3>
 
@@ -212,12 +225,10 @@ export default function DailyPage({ sessions, fetchSessions }) {
           </div>
 
           {todos
-            .filter((t) => t.type === "tomorrow")
+            .filter((t) => t.date === tomorrow)
             .map((t) => (
               <div key={t.id} className="flex justify-between items-center">
-                <div className="text-gray-300">
-                  {t.text}
-                </div>
+                <div className="text-gray-300">{t.text}</div>
 
                 <button
                   onClick={() => deleteTodo(t.id)}
@@ -296,37 +307,33 @@ export default function DailyPage({ sessions, fetchSessions }) {
       <div className="card">
         <h3 className="mb-4 font-semibold">Timeline</h3>
 
-        {todaySessions.length === 0 ? (
-          <p className="text-gray-400">No sessions yet</p>
-        ) : (
-          todaySessions.map((s) => (
-            <div
-              key={s.id}
-              className="flex items-center justify-between border-l-2 border-indigo-500 pl-4 mb-3"
-            >
-              <div>
-                <p className="font-medium">
-                  {s.start_time} → {s.end_time}
-                </p>
-                <p className="text-sm">{s.subject}</p>
-                <p className="text-xs text-gray-400">{s.topic}</p>
-              </div>
-
-              <div className="flex gap-3 items-center">
-                <span className="text-indigo-400">
-                  {s.duration} min
-                </span>
-
-                <button
-                  onClick={() => handleDelete(s.id)}
-                  className="text-red-400 text-sm"
-                >
-                  Delete
-                </button>
-              </div>
+        {todaySessions.map((s) => (
+          <div
+            key={s.id}
+            className="flex items-center justify-between border-l-2 border-indigo-500 pl-4 mb-3"
+          >
+            <div>
+              <p className="font-medium">
+                {s.start_time} → {s.end_time}
+              </p>
+              <p className="text-sm">{s.subject}</p>
+              <p className="text-xs text-gray-400">{s.topic}</p>
             </div>
-          ))
-        )}
+
+            <div className="flex gap-3 items-center">
+              <span className="text-indigo-400">
+                {s.duration} min
+              </span>
+
+              <button
+                onClick={() => handleDelete(s.id)}
+                className="text-red-400 text-sm"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
     </div>
