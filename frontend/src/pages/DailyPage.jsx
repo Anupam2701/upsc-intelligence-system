@@ -7,6 +7,10 @@ const API = "https://upsc-intelligence-system.onrender.com";
 export default function DailyPage({ sessions, fetchSessions }) {
   const today = new Date().toISOString().split("T")[0];
 
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const tomorrow = tomorrowDate.toISOString().split("T")[0];
+
   const todaySessions = sessions.filter((s) => s.date === today);
 
   const totalTime = todaySessions.reduce((sum, s) => sum + s.duration, 0);
@@ -31,14 +35,49 @@ export default function DailyPage({ sessions, fetchSessions }) {
     quality_score: "",
   });
 
-  // 🔥 AUTO DURATION
+  // ================= TODO STATE =================
+  const [todos, setTodos] = useState([]);
+  const [todayInput, setTodayInput] = useState("");
+  const [tomorrowInput, setTomorrowInput] = useState("");
+
+  // ================= TODO FUNCTIONS =================
+  const addTodo = (type) => {
+    const text = type === "today" ? todayInput : tomorrowInput;
+    if (!text) return;
+
+    const newTodo = {
+      id: Date.now(),
+      text,
+      type,
+      completed: false,
+    };
+
+    setTodos([newTodo, ...todos]);
+
+    if (type === "today") setTodayInput("");
+    else setTomorrowInput("");
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(
+      todos.map((t) =>
+        t.id === id ? { ...t, completed: !t.completed } : t
+      )
+    );
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((t) => t.id !== id));
+  };
+
+  // ================= AUTO DURATION =================
   const calculateDuration = (start, end) => {
     const s = new Date(`1970-01-01T${start}`);
     const e = new Date(`1970-01-01T${end}`);
     return (e - s) / (1000 * 60);
   };
 
-  // 🔥 ADD SESSION
+  // ================= ADD SESSION =================
   const handleSubmit = async () => {
     try {
       const duration = calculateDuration(form.start_time, form.end_time);
@@ -66,7 +105,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
     }
   };
 
-  // 🔥 DELETE
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     await axios.delete(`${API}/sessions/${id}`);
     fetchSessions();
@@ -77,9 +116,9 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
       {/* HEADER */}
       <PageHeader
-  title="Daily Command Center 🚀"
-  subtitle="Log sessions and track focus"
-/>
+        title="Daily Command Center 🚀"
+        subtitle="Log sessions and track focus"
+      />
 
       {/* STATS */}
       <div className="grid md:grid-cols-3 gap-4">
@@ -110,6 +149,84 @@ export default function DailyPage({ sessions, fetchSessions }) {
           <h2 className="text-3xl font-bold">
             {todaySessions.length}
           </h2>
+        </div>
+
+      </div>
+
+      {/* ================= TODO SECTION ================= */}
+      <div className="grid md:grid-cols-2 gap-4">
+
+        {/* TODAY TODO */}
+        <div className="card space-y-3">
+          <h3 className="font-semibold">Today's Plan ☀️</h3>
+
+          <div className="flex gap-2">
+            <input
+              value={todayInput}
+              onChange={(e) => setTodayInput(e.target.value)}
+              placeholder="Add today's task..."
+              className="input flex-1"
+            />
+            <button onClick={() => addTodo("today")} className="btn-primary">
+              Add
+            </button>
+          </div>
+
+          {todos
+            .filter((t) => t.type === "today")
+            .map((t) => (
+              <div key={t.id} className="flex justify-between items-center">
+                <div
+                  onClick={() => toggleTodo(t.id)}
+                  className={`cursor-pointer ${
+                    t.completed ? "line-through text-gray-500" : ""
+                  }`}
+                >
+                  {t.text}
+                </div>
+
+                <button
+                  onClick={() => deleteTodo(t.id)}
+                  className="text-red-400 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+        </div>
+
+        {/* TOMORROW TODO */}
+        <div className="card space-y-3">
+          <h3 className="font-semibold">Tomorrow Plan 🌙</h3>
+
+          <div className="flex gap-2">
+            <input
+              value={tomorrowInput}
+              onChange={(e) => setTomorrowInput(e.target.value)}
+              placeholder="Plan tomorrow..."
+              className="input flex-1"
+            />
+            <button onClick={() => addTodo("tomorrow")} className="btn-primary">
+              Add
+            </button>
+          </div>
+
+          {todos
+            .filter((t) => t.type === "tomorrow")
+            .map((t) => (
+              <div key={t.id} className="flex justify-between items-center">
+                <div className="text-gray-300">
+                  {t.text}
+                </div>
+
+                <button
+                  onClick={() => deleteTodo(t.id)}
+                  className="text-red-400 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
         </div>
 
       </div>
