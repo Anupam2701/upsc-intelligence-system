@@ -9,7 +9,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  const tomorrow = tomorrowDate.toISOString().split("T")[0];
+  //const tomorrow = tomorrowDate.toISOString().split("T")[0];
 
   const todaySessions = sessions.filter((s) => s.date === today);
 
