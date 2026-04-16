@@ -26,46 +26,53 @@ export default function AIPage() {
 
   // ================= CHAT =================
   const sendMessage = async () => {
-    if (!input.trim()) return;
+  if (!input.trim()) return;
 
-    const userMsg = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMsg]);
+  const userMsg = { role: "user", content: input };
+  setMessages((prev) => [...prev, userMsg]);
 
-    setInput("");
-    setLoading(true);
+  setInput("");
+  setLoading(true);
 
-    try {
-      const res = await axios.post(`${API}/ai/chat`, {
-        question: input,
+  try {
+    const res = await axios.post(`${API}/ai/chat`, {
+      question: input,
+    });
+
+    const fullText = res.data.answer;
+
+    // Add empty AI message first
+    setMessages((prev) => [
+      ...prev,
+      { role: "ai", content: "" },
+    ]);
+
+    let index = 0;
+
+    const interval = setInterval(() => {
+      index++;
+
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1].content =
+          fullText.slice(0, index);
+        return updated;
       });
 
-      // 🔥 FAKE STREAMING EFFECT
-      const fullText = res.data.answer;
-      let streamed = "";
-
-      const aiMsg = { role: "ai", content: "" };
-      setMessages((prev) => [...prev, aiMsg]);
-
-      for (let i = 0; i < fullText.length; i++) {
-        streamed += fullText[i];
-
-        await new Promise((r) => setTimeout(r, 5));
-
-        setMessages((prev) => {
-          const updated = [...prev];
-          updated[updated.length - 1].content = streamed;
-          return updated;
-        });
+      if (index >= fullText.length) {
+        clearInterval(interval);
+        setLoading(false);
       }
-    } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", content: "⚠️ Error generating response" },
-      ]);
-    }
+    }, 10);
 
+  } catch (err) {
+    setMessages((prev) => [
+      ...prev,
+      { role: "ai", content: "⚠️ Error generating response" },
+    ]);
     setLoading(false);
-  };
+  }
+};
 
   return (
     <div className="h-[calc(100vh-80px)] flex flex-col text-white">
