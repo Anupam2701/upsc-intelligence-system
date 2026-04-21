@@ -231,32 +231,32 @@ export default function DailyPage({ sessions, fetchSessions }) {
         <h3>Quick Add ⚡</h3>
 
         {/* 🔥 CUSTOM DARK DROPDOWN */}
-        <div className="relative">
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="input w-full flex justify-between items-center"
-          >
-            {form.exam}
-            <span>▼</span>
-          </button>
+        <div className="relative z-50">
+  <button
+    onClick={() => setDropdownOpen(!dropdownOpen)}
+    className="input w-full flex justify-between items-center"
+  >
+    {form.exam}
+    <span>▼</span>
+  </button>
 
-          {dropdownOpen && (
-            <div className="absolute mt-2 w-full bg-[#0f172a] border border-white/10 rounded-lg shadow-lg z-50">
-              {exams.map((item) => (
-                <div
-                  key={item}
-                  onClick={() => {
-                    setForm({ ...form, exam: item });
-                    setDropdownOpen(false);
-                  }}
-                  className="px-4 py-2 hover:bg-indigo-500 cursor-pointer"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          )}
+  {dropdownOpen && (
+    <div className="absolute left-0 mt-2 w-full bg-[#0f172a] border border-white/10 rounded-lg shadow-xl z-[9999]">
+      {exams.map((item) => (
+        <div
+          key={item}
+          onClick={() => {
+            setForm({ ...form, exam: item });
+            setDropdownOpen(false);
+          }}
+          className="px-4 py-2 hover:bg-indigo-500 cursor-pointer"
+        >
+          {item}
         </div>
+      ))}
+    </div>
+  )}
+</div>
 
         <div className="grid md:grid-cols-5 gap-3">
 
