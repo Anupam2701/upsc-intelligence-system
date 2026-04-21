@@ -38,6 +38,19 @@ export default function DailyPage({ sessions, fetchSessions }) {
     exam: "UPSC CSE",
   });
 
+  // ================= DROPDOWN =================
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const exams = [
+    "UPSC CSE",
+    "RBI",
+    "SEBI",
+    "NABARD",
+    "IRDAI",
+    "PFRDA",
+    "Interview Prep",
+  ];
+
   // ================= TODO =================
   const [todos, setTodos] = useState([]);
   const [todayInput, setTodayInput] = useState("");
@@ -217,20 +230,33 @@ export default function DailyPage({ sessions, fetchSessions }) {
       <div className="card space-y-3">
         <h3>Quick Add ⚡</h3>
 
-        {/* FIXED DROPDOWN */}
-        <select
-          value={form.exam}
-          onChange={(e) => setForm({ ...form, exam: e.target.value })}
-          className="input w-full bg-[#0f172a] text-white border border-white/10"
-        >
-          <option>UPSC CSE</option>
-          <option>RBI</option>
-          <option>SEBI</option>
-          <option>NABARD</option>
-          <option>IRDAI</option>
-          <option>PFRDA</option>
-          <option>Interview Prep</option>
-        </select>
+        {/* 🔥 CUSTOM DARK DROPDOWN */}
+        <div className="relative">
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="input w-full flex justify-between items-center"
+          >
+            {form.exam}
+            <span>▼</span>
+          </button>
+
+          {dropdownOpen && (
+            <div className="absolute mt-2 w-full bg-[#0f172a] border border-white/10 rounded-lg shadow-lg z-50">
+              {exams.map((item) => (
+                <div
+                  key={item}
+                  onClick={() => {
+                    setForm({ ...form, exam: item });
+                    setDropdownOpen(false);
+                  }}
+                  className="px-4 py-2 hover:bg-indigo-500 cursor-pointer"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="grid md:grid-cols-5 gap-3">
 
