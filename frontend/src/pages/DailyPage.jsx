@@ -5,6 +5,7 @@ import PageHeader from "../components/PageHeader";
 const API = "https://upsc-intelligence-system.onrender.com";
 
 export default function DailyPage({ sessions, fetchSessions }) {
+
   const today = new Date().toISOString().split("T")[0];
 
   const tomorrowDate = new Date();
@@ -26,7 +27,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
   const focusScore = Math.round(progress * 0.6 + avgQuality * 20);
 
-  // 🔥 UPDATED FORM (added exam)
+  // ================= FORM =================
   const [form, setForm] = useState({
     date: today,
     subject: "",
@@ -37,7 +38,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
     exam: "UPSC CSE",
   });
 
-  // ================= TODO STATE =================
+  // ================= TODO =================
   const [todos, setTodos] = useState([]);
   const [todayInput, setTodayInput] = useState("");
   const [tomorrowInput, setTomorrowInput] = useState("");
@@ -59,11 +60,9 @@ export default function DailyPage({ sessions, fetchSessions }) {
     const date = type === "today" ? today : tomorrow;
 
     await axios.post(`${API}/todos/`, { text, date, type });
-
     fetchTodos();
 
-    if (type === "today") setTodayInput("");
-    else setTomorrowInput("");
+    type === "today" ? setTodayInput("") : setTomorrowInput("");
   };
 
   const toggleTodo = async (id) => {
@@ -94,7 +93,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
         revision: false,
       });
 
-      await fetchSessions();
+      fetchSessions();
 
       setForm({
         date: today,
@@ -107,7 +106,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
       });
 
     } catch (err) {
-      console.error("ADD SESSION ERROR:", err.response?.data || err.message);
+      console.error(err);
     }
   };
 
@@ -132,6 +131,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
           <h2 className="text-3xl font-bold text-indigo-400">
             {totalTime} min
           </h2>
+
           <div className="mt-2 w-full bg-white/10 rounded-full h-2">
             <div
               className="bg-indigo-500 h-2 rounded-full"
@@ -156,15 +156,72 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
       </div>
 
+      {/* ================= TODO ================= */}
+      <div className="grid md:grid-cols-2 gap-4">
+
+        <div className="card space-y-3">
+          <h3>Today's Plan ☀️</h3>
+
+          <div className="flex gap-2">
+            <input
+              value={todayInput}
+              onChange={(e) => setTodayInput(e.target.value)}
+              className="input flex-1"
+              placeholder="Add today's task..."
+            />
+            <button onClick={() => addTodo("today")} className="btn-primary">
+              Add
+            </button>
+          </div>
+
+          {todos.filter(t => t.date === today).map(t => (
+            <div key={t.id} className="flex justify-between">
+              <span onClick={() => toggleTodo(t.id)} className="cursor-pointer">
+                {t.text}
+              </span>
+              <button onClick={() => deleteTodo(t.id)} className="text-red-400">
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="card space-y-3">
+          <h3>Tomorrow Plan 🌙</h3>
+
+          <div className="flex gap-2">
+            <input
+              value={tomorrowInput}
+              onChange={(e) => setTomorrowInput(e.target.value)}
+              className="input flex-1"
+              placeholder="Plan tomorrow..."
+            />
+            <button onClick={() => addTodo("tomorrow")} className="btn-primary">
+              Add
+            </button>
+          </div>
+
+          {todos.filter(t => t.date === tomorrow).map(t => (
+            <div key={t.id} className="flex justify-between">
+              <span>{t.text}</span>
+              <button onClick={() => deleteTodo(t.id)} className="text-red-400">
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+
+      </div>
+
       {/* ================= QUICK ADD ================= */}
       <div className="card space-y-3">
-        <h3 className="font-semibold">Quick Add ⚡</h3>
+        <h3>Quick Add ⚡</h3>
 
-        {/* 🔥 NEW: EXAM DROPDOWN */}
+        {/* FIXED DROPDOWN */}
         <select
           value={form.exam}
           onChange={(e) => setForm({ ...form, exam: e.target.value })}
-          className="input w-full"
+          className="input w-full bg-[#0f172a] text-white border border-white/10"
         >
           <option>UPSC CSE</option>
           <option>RBI</option>
@@ -175,171 +232,59 @@ export default function DailyPage({ sessions, fetchSessions }) {
           <option>Interview Prep</option>
         </select>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div className="grid md:grid-cols-5 gap-3">
 
-          <input
-            placeholder="Subject"
+          <input className="input" placeholder="Subject"
             value={form.subject}
-            onChange={(e) =>
-              setForm({ ...form, subject: e.target.value })
-            }
-            className="input"
+            onChange={(e)=>setForm({...form, subject:e.target.value})}
           />
 
-          <input
-            placeholder="Topic"
+          <input className="input" placeholder="Topic"
             value={form.topic}
-            onChange={(e) =>
-              setForm({ ...form, topic: e.target.value })
-            }
-            className="input"
+            onChange={(e)=>setForm({...form, topic:e.target.value})}
           />
 
-          <input
-            type="time"
+          <input type="time" className="input"
             value={form.start_time}
-            onChange={(e) =>
-              setForm({ ...form, start_time: e.target.value })
-            }
-            className="input"
+            onChange={(e)=>setForm({...form, start_time:e.target.value})}
           />
 
-          <input
-            type="time"
+          <input type="time" className="input"
             value={form.end_time}
-            onChange={(e) =>
-              setForm({ ...form, end_time: e.target.value })
-            }
-            className="input"
+            onChange={(e)=>setForm({...form, end_time:e.target.value})}
           />
 
-          <input
-            placeholder="Quality"
+          <input className="input" placeholder="Quality"
             value={form.quality_score}
-            onChange={(e) =>
-              setForm({ ...form, quality_score: e.target.value })
-            }
-            className="input"
+            onChange={(e)=>setForm({...form, quality_score:e.target.value})}
           />
 
         </div>
 
-        <button
-          onClick={handleSubmit}
-          className="bg-indigo-500 hover:bg-indigo-600 rounded-lg px-4 py-2"
-        >
+        <button onClick={handleSubmit} className="btn-primary">
           Add Session
         </button>
       </div>
 
       {/* ================= TIMELINE ================= */}
       <div className="card">
-        <h3 className="mb-4 font-semibold">Timeline</h3>
+        <h3>Timeline</h3>
 
         {todaySessions.map((s) => (
-          <div
-            key={s.id}
-            className="flex items-center justify-between border-l-2 border-indigo-500 pl-4 mb-3"
-          >
+          <div key={s.id} className="flex justify-between mt-3">
             <div>
-              <p className="font-medium">
-                {s.start_time} → {s.end_time}
-              </p>
-              <p className="text-sm">
-                {s.subject} ({s.exam || "UPSC"})
-              </p>
-              <p className="text-xs text-gray-400">{s.topic}</p>
+              {s.start_time} → {s.end_time}
+              <div>{s.subject} ({s.exam})</div>
             </div>
 
-            <div className="flex gap-3 items-center">
-              <span className="text-indigo-400">
-                {s.duration} min
-              </span>
-
-              <button
-                onClick={() => handleDelete(s.id)}
-                className="text-red-400 text-sm"
-              >
+            <div>
+              {s.duration} min
+              <button onClick={()=>handleDelete(s.id)} className="text-red-400 ml-2">
                 Delete
               </button>
             </div>
           </div>
         ))}
-        {/* ================= TODO SECTION ================= */}
-<div className="grid md:grid-cols-2 gap-4">
-
-  {/* TODAY */}
-  <div className="card space-y-3">
-    <h3 className="font-semibold">Today's Plan ☀️</h3>
-
-    <div className="flex gap-2">
-      <input
-        value={todayInput}
-        onChange={(e) => setTodayInput(e.target.value)}
-        placeholder="Add today's task..."
-        className="input flex-1"
-      />
-      <button onClick={() => addTodo("today")} className="btn-primary">
-        Add
-      </button>
-    </div>
-
-    {todos
-      .filter((t) => t.date === today)
-      .map((t) => (
-        <div key={t.id} className="flex justify-between items-center">
-          <div
-            onClick={() => toggleTodo(t.id)}
-            className={`cursor-pointer ${
-              t.completed ? "line-through text-gray-500" : ""
-            }`}
-          >
-            {t.text}
-          </div>
-
-          <button
-            onClick={() => deleteTodo(t.id)}
-            className="text-red-400 text-sm"
-          >
-            Delete
-          </button>
-        </div>
-      ))}
-  </div>
-
-  {/* TOMORROW */}
-  <div className="card space-y-3">
-    <h3 className="font-semibold">Tomorrow Plan 🌙</h3>
-
-    <div className="flex gap-2">
-      <input
-        value={tomorrowInput}
-        onChange={(e) => setTomorrowInput(e.target.value)}
-        placeholder="Plan tomorrow..."
-        className="input flex-1"
-      />
-      <button onClick={() => addTodo("tomorrow")} className="btn-primary">
-        Add
-      </button>
-    </div>
-
-    {todos
-      .filter((t) => t.date === tomorrow)
-      .map((t) => (
-        <div key={t.id} className="flex justify-between items-center">
-          <div className="text-gray-300">{t.text}</div>
-
-          <button
-            onClick={() => deleteTodo(t.id)}
-            className="text-red-400 text-sm"
-          >
-            Delete
-          </button>
-        </div>
-      ))}
-  </div>
-
-</div>
       </div>
 
     </div>
