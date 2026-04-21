@@ -10,6 +10,9 @@ class StudySessionCreate(BaseModel):
     quality_score: int
     revision: bool
 
-    # 🔥 NEW
+    # 🔥 TIME
     start_time: Optional[str] = None
     end_time: Optional[str] = None
+
+    # 🔥 NEW EXAM
+    exam: Optional[str] = "UPSC CSE"

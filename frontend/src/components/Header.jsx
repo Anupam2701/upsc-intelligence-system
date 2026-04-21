@@ -14,7 +14,7 @@ flex items-center justify-between px-4 md:px-6 z-[100]">
         </button>
 
         <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-500 text-transparent bg-clip-text">
-          MY UPSC DAILY TRACKER
+          MY EXAM TRACKER
         </h1>
       </div>
 

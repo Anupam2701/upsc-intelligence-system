@@ -15,6 +15,9 @@ class StudySession(Base):
 
     revision = Column(Boolean)
 
-    # 🔥 NEW FIELDS
+    # 🔥 NEW TIME FIELDS
     start_time = Column(String, nullable=True)
     end_time = Column(String, nullable=True)
+
+    # 🔥 NEW EXAM FIELD
+    exam = Column(String, default="UPSC CSE")
