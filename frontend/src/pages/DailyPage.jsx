@@ -227,7 +227,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
       </div>
 
       {/* ================= QUICK ADD ================= */}
-      <div className="card space-y-3">
+      <div className="card space-y-3 card space-y-3 relative">
         <h3>Quick Add ⚡</h3>
 
         {/* 🔥 CUSTOM DARK DROPDOWN */}
