@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import axios from "axios";
 import PageHeader from "../components/PageHeader";
 
@@ -40,6 +41,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
   // ================= DROPDOWN =================
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState(null);
 
   const exams = [
     "UPSC CSE",
@@ -50,6 +52,18 @@ export default function DailyPage({ sessions, fetchSessions }) {
     "PFRDA",
     "Interview Prep",
   ];
+
+  const handleOpenDropdown = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    setDropdownPos({
+      top: rect.bottom + window.scrollY,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
+
+    setDropdownOpen((prev) => !prev);
+  };
 
   // ================= TODO =================
   const [todos, setTodos] = useState([]);
@@ -88,6 +102,7 @@ export default function DailyPage({ sessions, fetchSessions }) {
     fetchTodos();
   };
 
+  // ================= UTILS =================
   const calculateDuration = (start, end) => {
     const s = new Date(`1970-01-01T${start}`);
     const e = new Date(`1970-01-01T${end}`);
@@ -227,36 +242,43 @@ export default function DailyPage({ sessions, fetchSessions }) {
       </div>
 
       {/* ================= QUICK ADD ================= */}
-      <div className="card space-y-3 card space-y-3 relative">
+      <div className="card space-y-3">
         <h3>Quick Add ⚡</h3>
 
-        {/* 🔥 CUSTOM DARK DROPDOWN */}
-        <div className="relative z-50">
-  <button
-    onClick={() => setDropdownOpen(!dropdownOpen)}
-    className="input w-full flex justify-between items-center"
-  >
-    {form.exam}
-    <span>▼</span>
-  </button>
-
-  {dropdownOpen && (
-    <div className="absolute left-0 mt-2 w-full bg-[#0f172a] border border-white/10 rounded-lg shadow-xl z-[9999]">
-      {exams.map((item) => (
-        <div
-          key={item}
-          onClick={() => {
-            setForm({ ...form, exam: item });
-            setDropdownOpen(false);
-          }}
-          className="px-4 py-2 hover:bg-indigo-500 cursor-pointer"
+        {/* ✅ PORTAL DROPDOWN */}
+        <button
+          onClick={handleOpenDropdown}
+          className="input w-full flex justify-between items-center"
         >
-          {item}
-        </div>
-      ))}
-    </div>
-  )}
-</div>
+          {form.exam}
+          <span>▼</span>
+        </button>
+
+        {dropdownOpen &&
+          createPortal(
+            <div
+              className="fixed bg-[#0f172a] border border-white/10 rounded-lg shadow-xl z-[9999]"
+              style={{
+                top: dropdownPos?.top,
+                left: dropdownPos?.left,
+                width: dropdownPos?.width,
+              }}
+            >
+              {exams.map((item) => (
+                <div
+                  key={item}
+                  onClick={() => {
+                    setForm({ ...form, exam: item });
+                    setDropdownOpen(false);
+                  }}
+                  className="px-4 py-2 hover:bg-indigo-500 cursor-pointer"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>,
+            document.body
+          )}
 
         <div className="grid md:grid-cols-5 gap-3">
 
