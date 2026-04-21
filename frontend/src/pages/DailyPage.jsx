@@ -265,6 +265,81 @@ export default function DailyPage({ sessions, fetchSessions }) {
             </div>
           </div>
         ))}
+        {/* ================= TODO SECTION ================= */}
+<div className="grid md:grid-cols-2 gap-4">
+
+  {/* TODAY */}
+  <div className="card space-y-3">
+    <h3 className="font-semibold">Today's Plan ☀️</h3>
+
+    <div className="flex gap-2">
+      <input
+        value={todayInput}
+        onChange={(e) => setTodayInput(e.target.value)}
+        placeholder="Add today's task..."
+        className="input flex-1"
+      />
+      <button onClick={() => addTodo("today")} className="btn-primary">
+        Add
+      </button>
+    </div>
+
+    {todos
+      .filter((t) => t.date === today)
+      .map((t) => (
+        <div key={t.id} className="flex justify-between items-center">
+          <div
+            onClick={() => toggleTodo(t.id)}
+            className={`cursor-pointer ${
+              t.completed ? "line-through text-gray-500" : ""
+            }`}
+          >
+            {t.text}
+          </div>
+
+          <button
+            onClick={() => deleteTodo(t.id)}
+            className="text-red-400 text-sm"
+          >
+            Delete
+          </button>
+        </div>
+      ))}
+  </div>
+
+  {/* TOMORROW */}
+  <div className="card space-y-3">
+    <h3 className="font-semibold">Tomorrow Plan 🌙</h3>
+
+    <div className="flex gap-2">
+      <input
+        value={tomorrowInput}
+        onChange={(e) => setTomorrowInput(e.target.value)}
+        placeholder="Plan tomorrow..."
+        className="input flex-1"
+      />
+      <button onClick={() => addTodo("tomorrow")} className="btn-primary">
+        Add
+      </button>
+    </div>
+
+    {todos
+      .filter((t) => t.date === tomorrow)
+      .map((t) => (
+        <div key={t.id} className="flex justify-between items-center">
+          <div className="text-gray-300">{t.text}</div>
+
+          <button
+            onClick={() => deleteTodo(t.id)}
+            className="text-red-400 text-sm"
+          >
+            Delete
+          </button>
+        </div>
+      ))}
+  </div>
+
+</div>
       </div>
 
     </div>
