@@ -6,7 +6,6 @@ import {
   BookOpen,
   Brain,
   Clock,
-  GraduationCap,
 } from "lucide-react";
 
 export default function Sidebar({ collapsed }) {
