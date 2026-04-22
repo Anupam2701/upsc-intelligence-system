@@ -5,7 +5,6 @@ import PageHeader from "../components/PageHeader";
 const API = "https://upsc-intelligence-system.onrender.com";
 
 export default function DailyPage({ sessions, fetchSessions }) {
-
   const today = new Date().toISOString().split("T")[0];
 
   const tomorrowDate = new Date();
@@ -104,7 +103,6 @@ export default function DailyPage({ sessions, fetchSessions }) {
         quality_score: "",
         exam: "UPSC CSE",
       });
-
     } catch (err) {
       console.error(err);
     }
@@ -117,7 +115,6 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-
       <PageHeader
         title="Daily Command Center 🚀"
         subtitle="Log sessions and track focus"
@@ -125,7 +122,6 @@ export default function DailyPage({ sessions, fetchSessions }) {
 
       {/* ================= STATS ================= */}
       <div className="grid md:grid-cols-3 gap-4">
-
         <div className="card">
           <p className="text-gray-400">Focus Time</p>
           <h2 className="text-3xl font-bold text-indigo-400">
@@ -153,12 +149,10 @@ export default function DailyPage({ sessions, fetchSessions }) {
             {todaySessions.length}
           </h2>
         </div>
-
       </div>
 
       {/* ================= TODO ================= */}
       <div className="grid md:grid-cols-2 gap-4">
-
         <div className="card space-y-3">
           <h3>Today's Plan ☀️</h3>
 
@@ -174,16 +168,24 @@ export default function DailyPage({ sessions, fetchSessions }) {
             </button>
           </div>
 
-          {todos.filter(t => t.date === today).map(t => (
-            <div key={t.id} className="flex justify-between">
-              <span onClick={() => toggleTodo(t.id)} className="cursor-pointer">
-                {t.text}
-              </span>
-              <button onClick={() => deleteTodo(t.id)} className="text-red-400">
-                Delete
-              </button>
-            </div>
-          ))}
+          {todos
+            .filter((t) => t.date === today)
+            .map((t) => (
+              <div key={t.id} className="flex justify-between">
+                <span
+                  onClick={() => toggleTodo(t.id)}
+                  className="cursor-pointer"
+                >
+                  {t.text}
+                </span>
+                <button
+                  onClick={() => deleteTodo(t.id)}
+                  className="text-red-400"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
         </div>
 
         <div className="card space-y-3">
@@ -201,16 +203,20 @@ export default function DailyPage({ sessions, fetchSessions }) {
             </button>
           </div>
 
-          {todos.filter(t => t.date === tomorrow).map(t => (
-            <div key={t.id} className="flex justify-between">
-              <span>{t.text}</span>
-              <button onClick={() => deleteTodo(t.id)} className="text-red-400">
-                Delete
-              </button>
-            </div>
-          ))}
+          {todos
+            .filter((t) => t.date === tomorrow)
+            .map((t) => (
+              <div key={t.id} className="flex justify-between">
+                <span>{t.text}</span>
+                <button
+                  onClick={() => deleteTodo(t.id)}
+                  className="text-red-400"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
         </div>
-
       </div>
 
       {/* ================= QUICK ADD ================= */}
@@ -223,42 +229,52 @@ export default function DailyPage({ sessions, fetchSessions }) {
           onChange={(e) => setForm({ ...form, exam: e.target.value })}
           className="input w-full bg-[#0f172a] text-white border border-white/10"
         >
-          <option>UPSC CSE</option>
-          <option>RBI</option>
-          <option>SEBI</option>
-          <option>NABARD</option>
-          <option>IRDAI</option>
-          <option>PFRDA</option>
-          <option>Interview Prep</option>
+          <option className="bg-[#0f172a] text-white" value="UPSC CSE">UPSC CSE</option>
+          <option className="bg-[#0f172a] text-white" value="RBI">RBI</option>
+          <option className="bg-[#0f172a] text-white" value="SEBI">SEBI</option>
+          <option className="bg-[#0f172a] text-white" value="NABARD">NABARD</option>
+          <option className="bg-[#0f172a] text-white" value="IRDAI">IRDAI</option>
+          <option className="bg-[#0f172a] text-white" value="PFRDA">PFRDA</option>
+          <option className="bg-[#0f172a] text-white" value="Interview Prep">Interview Prep</option>
         </select>
 
         <div className="grid md:grid-cols-5 gap-3">
-
-          <input className="input" placeholder="Subject"
+          <input
+            className="input"
+            placeholder="Subject"
             value={form.subject}
-            onChange={(e)=>setForm({...form, subject:e.target.value})}
+            onChange={(e) => setForm({ ...form, subject: e.target.value })}
           />
 
-          <input className="input" placeholder="Topic"
+          <input
+            className="input"
+            placeholder="Topic"
             value={form.topic}
-            onChange={(e)=>setForm({...form, topic:e.target.value})}
+            onChange={(e) => setForm({ ...form, topic: e.target.value })}
           />
 
-          <input type="time" className="input"
+          <input
+            type="time"
+            className="input"
             value={form.start_time}
-            onChange={(e)=>setForm({...form, start_time:e.target.value})}
+            onChange={(e) => setForm({ ...form, start_time: e.target.value })}
           />
 
-          <input type="time" className="input"
+          <input
+            type="time"
+            className="input"
             value={form.end_time}
-            onChange={(e)=>setForm({...form, end_time:e.target.value})}
+            onChange={(e) => setForm({ ...form, end_time: e.target.value })}
           />
 
-          <input className="input" placeholder="Quality"
+          <input
+            className="input"
+            placeholder="Quality"
             value={form.quality_score}
-            onChange={(e)=>setForm({...form, quality_score:e.target.value})}
+            onChange={(e) =>
+              setForm({ ...form, quality_score: e.target.value })
+            }
           />
-
         </div>
 
         <button onClick={handleSubmit} className="btn-primary">
@@ -274,19 +290,23 @@ export default function DailyPage({ sessions, fetchSessions }) {
           <div key={s.id} className="flex justify-between mt-3">
             <div>
               {s.start_time} → {s.end_time}
-              <div>{s.subject} ({s.exam})</div>
+              <div>
+                {s.subject} ({s.exam})
+              </div>
             </div>
 
             <div>
               {s.duration} min
-              <button onClick={()=>handleDelete(s.id)} className="text-red-400 ml-2">
+              <button
+                onClick={() => handleDelete(s.id)}
+                className="text-red-400 ml-2"
+              >
                 Delete
               </button>
             </div>
           </div>
         ))}
       </div>
-
     </div>
   );
 }
