@@ -146,7 +146,9 @@ export default function NotesPage() {
           className="input w-full"
         >
           {EXAMS.map((e) => (
-            <option key={e} value={e}>{e}</option>
+            <option key={e} value={e} className="bg-gray-900 text-white">
+              {e}
+            </option>
           ))}
         </select>
 
