@@ -12,7 +12,6 @@ import CalendarPage from "./pages/CalendarPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import NotesPage from "./pages/NotesPage";
 import AIPage from "./pages/AIPage";
-import UPSCPage from "./pages/UPSCPage";
 
 const API = "https://upsc-intelligence-system.onrender.com";
 
@@ -103,7 +102,6 @@ export default function App() {
 
             <Route path="/notes" element={<NotesPage />} />
             <Route path="/ai" element={<AIPage />} />
-            <Route path="/upsc" element={<UPSCPage />} />
 
           </Routes>
         </div>
