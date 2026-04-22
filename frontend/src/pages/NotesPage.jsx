@@ -32,26 +32,29 @@ export default function NotesPage() {
 
   const textRef = useRef();
 
-  // 🔥 FETCH NOTES
-  const fetchNotes = async () => {
+  // ✅ FIXED: useCallback
+  const fetchNotes = useCallback(async () => {
     const res = await axios.get(`${API}/notes/?exam=${exam}`);
     setNotes(res.data);
-  };
+  }, [exam]);
 
-  // 🔥 FETCH SUBJECTS
-  const fetchSubjects = async () => {
+  // ✅ FIXED: useCallback
+  const fetchSubjects = useCallback(async () => {
     const res = await axios.get(`${API}/notes/subjects?exam=${exam}`);
     setSubjects(res.data);
 
-    if (res.data.length > 0 && !selectedSubject) {
-      setSelectedSubject(res.data[0]);
+    if (res.data.length > 0) {
+      setSelectedSubject((prev) =>
+        prev && res.data.includes(prev) ? prev : res.data[0]
+      );
     }
-  };
+  }, [exam]);
 
+  // ✅ FIXED DEPENDENCIES
   useEffect(() => {
     fetchNotes();
     fetchSubjects();
-  }, [exam]);
+  }, [fetchNotes, fetchSubjects]);
 
   useEffect(() => {
     textRef.current?.focus();
@@ -64,7 +67,7 @@ export default function NotesPage() {
       n.title.toLowerCase().includes(search.toLowerCase())
     );
 
-  // 🔥 SAVE
+  // ✅ FIXED DEPENDENCIES
   const handleSave = useCallback(async () => {
     try {
       if (selectedNote) {
@@ -84,8 +87,8 @@ export default function NotesPage() {
         });
       }
 
-      fetchNotes();
-      fetchSubjects();
+      await fetchNotes();
+      await fetchSubjects();
 
       setSaved(true);
       setTimeout(() => setSaved(false), 1200);
@@ -96,24 +99,21 @@ export default function NotesPage() {
     } catch (err) {
       console.error(err);
     }
-  }, [selectedNote, editor, selectedSubject, exam]);
+  }, [selectedNote, editor, selectedSubject, exam, fetchNotes, fetchSubjects]);
 
-  // 🔥 NEW NOTE
   const handleNew = () => {
     setSelectedNote(null);
     setEditor({ title: "", content: "" });
   };
 
-  // 🔥 DELETE
   const handleDelete = async () => {
     if (!selectedNote) return;
 
     await axios.delete(`${API}/notes/${selectedNote.id}`);
-    fetchNotes();
+    await fetchNotes();
     handleNew();
   };
 
-  // 🔥 ADD SUBJECT
   const handleAddSubject = () => {
     if (!newSubject.trim()) return;
 
@@ -122,7 +122,6 @@ export default function NotesPage() {
     setNewSubject("");
   };
 
-  // 🔥 OPEN NOTE
   const openNote = (note) => {
     setSelectedNote(note);
     setEditor({
@@ -135,9 +134,9 @@ export default function NotesPage() {
     <div className="flex h-screen bg-[#020617] text-white">
 
       {/* LEFT PANEL */}
-      <div className="w-1/4 p-4 space-y-4 border-r border-gray-800">
+      <div className="w-1/4 p-4 space-y-4 border-r border-gray-800 overflow-y-auto">
 
-        {/* 🔥 EXAM DROPDOWN */}
+        {/* EXAM DROPDOWN */}
         <select
           value={exam}
           onChange={(e) => {
@@ -153,7 +152,7 @@ export default function NotesPage() {
 
         <h2 className="text-lg font-semibold">Subjects</h2>
 
-        {/* 🔥 SUBJECT LIST */}
+        {/* SUBJECT LIST */}
         {subjects.map((s) => (
           <div
             key={s}
@@ -171,7 +170,7 @@ export default function NotesPage() {
           </div>
         ))}
 
-        {/* 🔥 ADD SUBJECT */}
+        {/* ADD SUBJECT */}
         <div className="flex gap-2">
           <input
             value={newSubject}
@@ -184,15 +183,15 @@ export default function NotesPage() {
           </button>
         </div>
 
-        {/* 🔥 NEW NOTE */}
+        {/* NEW NOTE */}
         <button
           onClick={handleNew}
-          className="bg-green-600 px-3 py-2 rounded w-full"
+          className="bg-green-600 px-3 py-2 rounded w-full hover:bg-green-500"
         >
           + New Note
         </button>
 
-        {/* 🔥 SEARCH */}
+        {/* SEARCH */}
         <input
           placeholder="Search notes..."
           value={search}
@@ -200,7 +199,7 @@ export default function NotesPage() {
           className="input w-full"
         />
 
-        {/* 🔥 NOTES LIST */}
+        {/* NOTES LIST */}
         <div className="space-y-2 max-h-[50vh] overflow-y-auto">
           {filteredNotes.map((n) => (
             <div
@@ -220,11 +219,10 @@ export default function NotesPage() {
       </div>
 
       {/* RIGHT PANEL */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 overflow-y-auto">
 
         <div className="card max-w-4xl space-y-4">
 
-          {/* 🔥 TITLE */}
           <input
             placeholder="Untitled"
             value={editor.title}
@@ -234,7 +232,6 @@ export default function NotesPage() {
             className="w-full bg-transparent text-2xl font-semibold outline-none"
           />
 
-          {/* 🔥 CONTENT */}
           <textarea
             ref={textRef}
             placeholder="Start writing..."
@@ -245,7 +242,6 @@ export default function NotesPage() {
             className="w-full h-[70vh] bg-transparent outline-none text-gray-300"
           />
 
-          {/* 🔥 ACTIONS */}
           <div className="flex gap-3">
             <button onClick={handleSave} className="btn-primary">
               Save
