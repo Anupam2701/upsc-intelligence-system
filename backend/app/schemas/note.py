@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 class NoteCreate(BaseModel):
+    exam: Optional[str] = "UPSC CSE"  # 🔥 NEW
     subject: str
     topic: str
     reference: str

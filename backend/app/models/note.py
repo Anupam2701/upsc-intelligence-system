@@ -7,6 +7,8 @@ class Note(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
+    exam = Column(String, default="UPSC CSE")  # 🔥 NEW
+
     subject = Column(String)
     topic = Column(String)
     reference = Column(String)
@@ -15,6 +17,6 @@ class Note(Base):
     title = Column(String)
     content = Column(Text)
 
-    type = Column(String, default="concept")  # ✅ FIX
+    type = Column(String, default="concept")
 
     created_at = Column(DateTime, default=datetime.utcnow)

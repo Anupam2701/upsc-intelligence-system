@@ -1,15 +1,26 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 
-
 const API = "https://upsc-intelligence-system.onrender.com";
 
-const SUBJECTS = ["HISTORY", "POLITY", "GEOGRAPHY"];
+const EXAMS = [
+  "UPSC CSE",
+  "RBI",
+  "SEBI",
+  "NABARD",
+  "IRDAI",
+  "PFRDA",
+  "Interview Prep",
+];
 
 export default function NotesPage() {
   const [notes, setNotes] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState("HISTORY");
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
+  const [exam, setExam] = useState("UPSC CSE");
+
+  const [newSubject, setNewSubject] = useState("");
 
   const [editor, setEditor] = useState({
     title: "",
@@ -17,24 +28,31 @@ export default function NotesPage() {
   });
 
   const [search, setSearch] = useState("");
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [pinned, setPinned] = useState([]);
-  const [showCommand, setShowCommand] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const textRef = useRef();
 
   // 🔥 FETCH NOTES
   const fetchNotes = async () => {
-    const res = await axios.get(`${API}/notes/`);
+    const res = await axios.get(`${API}/notes/?exam=${exam}`);
     setNotes(res.data);
+  };
+
+  // 🔥 FETCH SUBJECTS
+  const fetchSubjects = async () => {
+    const res = await axios.get(`${API}/notes/subjects?exam=${exam}`);
+    setSubjects(res.data);
+
+    if (res.data.length > 0 && !selectedSubject) {
+      setSelectedSubject(res.data[0]);
+    }
   };
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+    fetchSubjects();
+  }, [exam]);
 
-  // 🔥 AUTO FOCUS
   useEffect(() => {
     textRef.current?.focus();
   }, [selectedNote]);
@@ -56,18 +74,18 @@ export default function NotesPage() {
         });
       } else {
         await axios.post(`${API}/notes/`, {
+          exam,
           subject: selectedSubject,
           topic: "",
           reference: "",
           subtopic: "",
           title: editor.title || "Untitled",
           content: editor.content,
-          type: "concept",
         });
       }
 
-      const res = await axios.get(`${API}/notes/`);
-      setNotes(res.data);
+      fetchNotes();
+      fetchSubjects();
 
       setSaved(true);
       setTimeout(() => setSaved(false), 1200);
@@ -76,52 +94,9 @@ export default function NotesPage() {
       setEditor({ title: "", content: "" });
 
     } catch (err) {
-      console.error(err.response?.data || err.message);
+      console.error(err);
     }
-  }, [selectedNote, editor, selectedSubject]);
-
-  // 🔥 KEYBOARD SHORTCUTS
-  useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === "ArrowDown") {
-        setActiveIndex((prev) =>
-          Math.min(prev + 1, filteredNotes.length - 1)
-        );
-      }
-
-      if (e.key === "ArrowUp") {
-        setActiveIndex((prev) => Math.max(prev - 1, 0));
-      }
-
-      if (e.key === "Enter") {
-        if (filteredNotes[activeIndex]) {
-          openNote(filteredNotes[activeIndex]);
-        }
-      }
-
-      if (e.ctrlKey && e.key === "k") {
-        e.preventDefault();
-        setShowCommand((prev) => !prev);
-      }
-
-      if (e.ctrlKey && e.key === "s") {
-        e.preventDefault();
-        handleSave();
-      }
-    };
-
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [filteredNotes, activeIndex, handleSave]);
-
-  // 🔥 OPEN NOTE
-  const openNote = (note) => {
-    setSelectedNote(note);
-    setEditor({
-      title: note.title,
-      content: note.content,
-    });
-  };
+  }, [selectedNote, editor, selectedSubject, exam]);
 
   // 🔥 NEW NOTE
   const handleNew = () => {
@@ -134,38 +109,59 @@ export default function NotesPage() {
     if (!selectedNote) return;
 
     await axios.delete(`${API}/notes/${selectedNote.id}`);
-
-    const res = await axios.get(`${API}/notes/`);
-    setNotes(res.data);
-
+    fetchNotes();
     handleNew();
   };
 
-  // 🔥 PIN
-  const togglePin = (id) => {
-    setPinned((prev) =>
-      prev.includes(id)
-        ? prev.filter((p) => p !== id)
-        : [...prev, id]
-    );
+  // 🔥 ADD SUBJECT
+  const handleAddSubject = () => {
+    if (!newSubject.trim()) return;
+
+    setSubjects((prev) => [...prev, newSubject]);
+    setSelectedSubject(newSubject);
+    setNewSubject("");
+  };
+
+  // 🔥 OPEN NOTE
+  const openNote = (note) => {
+    setSelectedNote(note);
+    setEditor({
+      title: note.title,
+      content: note.content,
+    });
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-[#020617] text-white">
+    <div className="flex h-screen bg-[#020617] text-white">
 
       {/* LEFT PANEL */}
       <div className="w-1/4 p-4 space-y-4 border-r border-gray-800">
 
+        {/* 🔥 EXAM DROPDOWN */}
+        <select
+          value={exam}
+          onChange={(e) => {
+            setExam(e.target.value);
+            setSelectedSubject("");
+          }}
+          className="input w-full"
+        >
+          {EXAMS.map((e) => (
+            <option key={e} value={e}>{e}</option>
+          ))}
+        </select>
+
         <h2 className="text-lg font-semibold">Subjects</h2>
 
-        {SUBJECTS.map((s) => (
+        {/* 🔥 SUBJECT LIST */}
+        {subjects.map((s) => (
           <div
             key={s}
             onClick={() => {
               setSelectedSubject(s);
               handleNew();
             }}
-            className={`p-3 rounded cursor-pointer transition ${
+            className={`p-3 rounded cursor-pointer ${
               selectedSubject === s
                 ? "bg-indigo-600"
                 : "bg-gray-800 hover:bg-gray-700"
@@ -175,76 +171,60 @@ export default function NotesPage() {
           </div>
         ))}
 
+        {/* 🔥 ADD SUBJECT */}
+        <div className="flex gap-2">
+          <input
+            value={newSubject}
+            onChange={(e) => setNewSubject(e.target.value)}
+            placeholder="New subject"
+            className="input w-full"
+          />
+          <button onClick={handleAddSubject} className="btn-primary">
+            +
+          </button>
+        </div>
+
+        {/* 🔥 NEW NOTE */}
         <button
           onClick={handleNew}
-          className="bg-green-600 px-3 py-2 rounded w-full hover:bg-green-500"
+          className="bg-green-600 px-3 py-2 rounded w-full"
         >
           + New Note
         </button>
 
-        {/* SEARCH */}
+        {/* 🔥 SEARCH */}
         <input
           placeholder="Search notes..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full p-2 rounded bg-gray-900 outline-none text-sm"
+          className="input w-full"
         />
 
-        {/* PINNED */}
-        {pinned.length > 0 && (
-          <div>
-            <h3 className="text-xs text-gray-400 mb-1">Pinned</h3>
-            {notes
-              .filter((n) => pinned.includes(n.id))
-              .map((n) => (
-                <div key={n.id} className="text-yellow-400 text-sm">
-                  📌 {n.title}
-                </div>
-              ))}
-          </div>
-        )}
-
-        {/* EMPTY */}
-        {filteredNotes.length === 0 && (
-          <div className="text-gray-500 text-sm mt-4">
-            No notes yet. Start writing ✍️
-          </div>
-        )}
-
-        {/* NOTES LIST */}
-        <div className="space-y-2 mt-2 max-h-[55vh] overflow-y-auto">
-          {filteredNotes.map((n, i) => (
+        {/* 🔥 NOTES LIST */}
+        <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+          {filteredNotes.map((n) => (
             <div
               key={n.id}
               onClick={() => openNote(n)}
-              className={`group p-2 rounded cursor-pointer flex justify-between ${
+              className={`p-2 rounded cursor-pointer ${
                 selectedNote?.id === n.id
                   ? "bg-indigo-500"
-                  : i === activeIndex
-                  ? "bg-gray-700"
                   : "bg-gray-800 hover:bg-gray-700"
               }`}
             >
-              <span>{n.title}</span>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  togglePin(n.id);
-                }}
-                className="text-yellow-400 opacity-0 group-hover:opacity-100"
-              >
-                📌
-              </button>
+              {n.title}
             </div>
           ))}
         </div>
+
       </div>
 
       {/* RIGHT PANEL */}
       <div className="flex-1 p-6">
-        <div className="card max-w-3xl space-y-4">
 
+        <div className="card max-w-4xl space-y-4">
+
+          {/* 🔥 TITLE */}
           <input
             placeholder="Untitled"
             value={editor.title}
@@ -254,6 +234,7 @@ export default function NotesPage() {
             className="w-full bg-transparent text-2xl font-semibold outline-none"
           />
 
+          {/* 🔥 CONTENT */}
           <textarea
             ref={textRef}
             placeholder="Start writing..."
@@ -264,6 +245,7 @@ export default function NotesPage() {
             className="w-full h-[70vh] bg-transparent outline-none text-gray-300"
           />
 
+          {/* 🔥 ACTIONS */}
           <div className="flex gap-3">
             <button onClick={handleSave} className="btn-primary">
               Save
@@ -282,20 +264,8 @@ export default function NotesPage() {
           )}
 
         </div>
+
       </div>
-
-      {/* COMMAND PALETTE */}
-      {showCommand && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-          <div className="bg-gray-900 p-6 rounded w-1/3 border border-gray-800">
-            <input
-              placeholder="Search or create..."
-              className="w-full p-3 bg-gray-800 outline-none"
-            />
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }

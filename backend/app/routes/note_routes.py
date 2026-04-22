@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models.note import Note
-from app.schemas.note import NoteCreate, NoteUpdate
+from app.models.notes import Note
+from app.schemas.notes import NoteCreate, NoteUpdate
 
-router = APIRouter()
+router = APIRouter(prefix="/notes", tags=["Notes"])
 
 
 def get_db():
@@ -15,37 +15,55 @@ def get_db():
         db.close()
 
 
-# ✅ CREATE
+# ✅ CREATE NOTE
 @router.post("/")
 def create_note(note: NoteCreate, db: Session = Depends(get_db)):
-    try:
-        new_note = Note(
-            subject=note.subject or "",
-            topic=note.topic or "",
-            reference=note.reference or "",
-            subtopic=note.subtopic or "",
-            title=note.title or "Untitled",
-            content=note.content or "",
-            type="concept"
-        )
+    new_note = Note(
+        exam=note.exam,
+        subject=note.subject,
+        topic=note.topic,
+        reference=note.reference,
+        subtopic=note.subtopic,
+        title=note.title or "Untitled",
+        content=note.content or "",
+        type=note.type
+    )
 
-        db.add(new_note)
-        db.commit()
-        db.refresh(new_note)
+    db.add(new_note)
+    db.commit()
+    db.refresh(new_note)
 
-        return new_note
-
-    except Exception as e:
-        return {"error": str(e)}
+    return new_note
 
 
-# ✅ GET ALL
+# ✅ GET ALL NOTES (FILTER SUPPORT)
 @router.get("/")
-def get_notes(db: Session = Depends(get_db)):
-    return db.query(Note).all()
+def get_notes(exam: str = None, subject: str = None, db: Session = Depends(get_db)):
+    query = db.query(Note)
+
+    if exam:
+        query = query.filter(Note.exam == exam)
+
+    if subject:
+        query = query.filter(Note.subject == subject)
+
+    return query.order_by(Note.created_at.desc()).all()
 
 
-# ✅ UPDATE
+# ✅ GET UNIQUE SUBJECTS (🔥 IMPORTANT)
+@router.get("/subjects")
+def get_subjects(exam: str = None, db: Session = Depends(get_db)):
+    query = db.query(Note.subject)
+
+    if exam:
+        query = query.filter(Note.exam == exam)
+
+    subjects = query.distinct().all()
+
+    return [s[0] for s in subjects if s[0]]
+
+
+# ✅ UPDATE NOTE
 @router.put("/{note_id}")
 def update_note(note_id: int, data: NoteUpdate, db: Session = Depends(get_db)):
     note = db.query(Note).filter(Note.id == note_id).first()
@@ -60,7 +78,7 @@ def update_note(note_id: int, data: NoteUpdate, db: Session = Depends(get_db)):
     return {"msg": "updated"}
 
 
-# ✅ DELETE
+# ✅ DELETE NOTE
 @router.delete("/{note_id}")
 def delete_note(note_id: int, db: Session = Depends(get_db)):
     note = db.query(Note).filter(Note.id == note_id).first()
