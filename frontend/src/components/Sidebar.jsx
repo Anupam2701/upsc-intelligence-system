@@ -50,11 +50,6 @@ export default function Sidebar({ collapsed }) {
           {!collapsed && "Notes"}
         </NavLink>
 
-        <NavLink to="/upsc" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ""}`}>
-          <GraduationCap size={18} />
-          {!collapsed && "UPSC Hub"}
-        </NavLink>
-
         <NavLink to="/ai" className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ""}`}>
           <Brain size={18} />
           {!collapsed && "AI"}
