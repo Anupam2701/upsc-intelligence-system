@@ -19,14 +19,14 @@ def get_db():
 @router.post("/")
 def create_note(note: NoteCreate, db: Session = Depends(get_db)):
     new_note = Note(
-        exam=note.exam,
+        exam=note.exam,  # 🔥 ADD
         subject=note.subject,
         topic=note.topic,
         reference=note.reference,
         subtopic=note.subtopic,
-        title=note.title or "Untitled",
-        content=note.content or "",
-        type=note.type
+        title=note.title,
+        content=note.content,
+        type="concept"
     )
 
     db.add(new_note)
@@ -38,29 +38,21 @@ def create_note(note: NoteCreate, db: Session = Depends(get_db)):
 
 # ✅ GET ALL NOTES (FILTER SUPPORT)
 @router.get("/")
-def get_notes(exam: str = None, subject: str = None, db: Session = Depends(get_db)):
-    query = db.query(Note)
-
-    if exam:
-        query = query.filter(Note.exam == exam)
-
-    if subject:
-        query = query.filter(Note.subject == subject)
-
-    return query.order_by(Note.created_at.desc()).all()
+def get_notes(exam: str, db: Session = Depends(get_db)):
+    return db.query(Note).filter(Note.exam == exam).all()
 
 
 # ✅ GET UNIQUE SUBJECTS (🔥 IMPORTANT)
 @router.get("/subjects")
-def get_subjects(exam: str = None, db: Session = Depends(get_db)):
-    query = db.query(Note.subject)
+def get_subjects(exam: str, db: Session = Depends(get_db)):
+    subjects = (
+        db.query(Note.subject)
+        .filter(Note.exam == exam)
+        .distinct()
+        .all()
+    )
 
-    if exam:
-        query = query.filter(Note.exam == exam)
-
-    subjects = query.distinct().all()
-
-    return [s[0] for s in subjects if s[0]]
+    return [s[0] for s in subjects]
 
 
 # ✅ UPDATE NOTE
