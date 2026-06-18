@@ -178,7 +178,7 @@ export default function AIPage() {
           {/* INPUT */}
           <div className="flex gap-2">
             <input
-              placeholder="Ask UPSC question..."
+              placeholder="Ask questions..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="flex-1 p-3 rounded-xl bg-white/5 border border-white/10"
