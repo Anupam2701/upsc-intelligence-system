@@ -32,7 +32,7 @@ supabase.auth.getSession().then(({ data }) => {
 setSession(data.session);
 });
 
-```
+
 const {
   data: { subscription },
 } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -40,7 +40,7 @@ const {
 });
 
 return () => subscription.unsubscribe();
-```
+
 
 }, []);
 
@@ -62,7 +62,6 @@ fetchSessions();
 
 return ( <Router>
 
-```
   <Routes>
 
     {/* LOGIN */}
