@@ -25,10 +25,6 @@ export default function LoginPage() {
   };
 
   return (
-    // existing JSX
-  )
-
-  return (
     <div className="min-h-screen bg-[#020617] flex items-center justify-center">
       <div className="w-full max-w-md bg-[#0f172a] p-8 rounded-2xl border border-white/10">
 
@@ -40,7 +36,7 @@ export default function LoginPage() {
           className="w-full p-3 rounded bg-[#1e293b] text-white mb-4"
           placeholder="Email"
           value={email}
-          onChange={(e)=>setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
@@ -48,7 +44,7 @@ export default function LoginPage() {
           className="w-full p-3 rounded bg-[#1e293b] text-white mb-4"
           placeholder="Password"
           value={password}
-          onChange={(e)=>setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <button
