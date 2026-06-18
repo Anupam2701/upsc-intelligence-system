@@ -32,8 +32,6 @@ return ( <div
    bg-[#020617]/80 backdrop-blur-xl border-b border-white/10
    flex items-center justify-between px-4 md:px-6 z-[100]"
  >
-
-```
   {/* LEFT */}
   <div className="flex items-center gap-3">
     <button onClick={toggleSidebar}>
