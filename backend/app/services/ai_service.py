@@ -49,7 +49,7 @@ def generate_strategy(sessions):
         summary += f"{s.subject} - {s.duration} min\n"
 
     prompt = f"""
-Analyze UPSC preparation:
+Analyze My preparation:
 
 {summary}
 

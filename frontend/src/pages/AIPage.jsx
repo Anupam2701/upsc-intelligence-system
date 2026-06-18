@@ -140,7 +140,7 @@ export default function AIPage() {
 
             {messages.length === 0 && (
               <p className="text-gray-400 text-center mt-20">
-                Ask anything about UPSC...
+                Ask anything...
               </p>
             )}
 

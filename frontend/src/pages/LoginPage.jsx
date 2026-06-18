@@ -29,7 +29,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-[#0f172a] p-8 rounded-2xl border border-white/10">
 
         <h1 className="text-3xl font-bold text-white mb-6">
-          UPSC Intelligence System
+          My Study Tracker
         </h1>
 
         <input
